@@ -59,18 +59,7 @@ const PhoneSignup = ({ navigation, route }) => {
 
       login(userData, userType);
       
-      // Navigate based on determined user type
-      if (userType === 'merchant') {
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'MerchantApp' }],
-        });
-      } else {
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'UserApp' }],
-        });
-      }
+      // No need to manually navigate, the AppNavigator will handle the route change automatically
     }, 1000);
   };
 

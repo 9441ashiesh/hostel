@@ -14,10 +14,7 @@ const MerchantDashboard = ({ navigation }) => {
 
   const handleLogout = () => {
     logout();
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'UserTypeSelection' }],
-    });
+    // No need to reset navigation, the AppNavigator will handle the route change
   };
 
   return (

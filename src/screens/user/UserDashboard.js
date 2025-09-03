@@ -55,10 +55,7 @@ const UserDashboard = ({ navigation }) => {
 
   const handleLogout = () => {
     logout();
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Auth' }],
-    });
+    // No need to reset navigation, the AppNavigator will handle the route change
   };
 
   const toggleLike = (id) => {
