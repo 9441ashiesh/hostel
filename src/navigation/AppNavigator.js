@@ -13,6 +13,7 @@ import UserDashboard from '../screens/user/UserDashboard';
 import ProfileScreen from '../screens/user/ProfileScreen';
 import LikesScreen from '../screens/user/LikesScreen';
 import HostelDetailScreen from '../screens/user/HostelDetailScreen';
+import SearchScreen from '../screens/user/SearchScreen';
 
 // Merchant Screens
 import MerchantDashboard from '../screens/merchant/MerchantDashboard';
@@ -50,6 +51,7 @@ const UserStack = () => (
     <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
     <Stack.Screen name="LikesScreen" component={LikesScreen} />
     <Stack.Screen name="HostelDetailScreen" component={HostelDetailScreen} />
+    <Stack.Screen name="SearchScreen" component={SearchScreen} />
   </Stack.Navigator>
 );
 

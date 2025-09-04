@@ -24,6 +24,11 @@ const UserLayout = ({ children, navigation, activeTab = 'home' }) => {
     console.log('Navigate to bookings');
   };
 
+  const navigateToSearch = () => {
+    // Navigate to search screen (to be created)
+    navigation.navigate('SearchScreen');
+  };
+
   const navigateToHelp = () => {
     // Navigate to help screen (to be created)
     console.log('Navigate to help');
@@ -52,16 +57,16 @@ const UserLayout = ({ children, navigation, activeTab = 'home' }) => {
           )}
         </TouchableOpacity>
         
-        <TouchableOpacity style={styles.navItem} onPress={navigateToHelp}>
-          {activeTab === 'help' ? (
+        <TouchableOpacity style={styles.navItem} onPress={navigateToSearch}>
+          {activeTab === 'search' ? (
             <View style={styles.activeNavItem}>
               <View style={styles.navIconContainer}>
-                <Text style={styles.activeNavIcon}>❓</Text>
+                <Text style={styles.activeNavIcon}>🔍</Text>
               </View>
             </View>
           ) : (
             <View style={styles.navIconContainer}>
-              <Text style={styles.navIcon}>❓</Text>
+              <Text style={styles.navIcon}>🔍</Text>
             </View>
           )}
         </TouchableOpacity>
