@@ -1,25 +1,24 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 
 // Auth Screens
-import UserTypeSelection from '../screens/auth/UserTypeSelection';
-import PhoneSignup from '../screens/auth/PhoneSignup';
-import OTPVerification from '../screens/auth/OTPVerification';
+import UserTypeSelection from '../auth/UserTypeSelection';
+import PhoneSignup from '../auth/PhoneSignup';
+import OTPVerification from '../auth/OTPVerification';
 
 // User Screens
-import UserDashboard from '../screens/user/UserDashboard';
-import ProfileScreen from '../screens/user/ProfileScreen';
-import LikesScreen from '../screens/user/LikesScreen';
-import HostelDetailScreen from '../screens/user/HostelDetailScreen';
+import UserDashboard from '../user/UserDashboard';
+import ProfileScreen from '../user/ProfileScreen';
+import LikesScreen from '../user/LikesScreen';
+import HostelDetailScreen from '../user/HostelDetailScreen';
 
 // Merchant Screens
-import MerchantDashboard from '../screens/merchant/MerchantDashboard';
-import PropertyInfo from '../screens/merchant/PropertyInfo';
-import PropertyLocationDetails from '../screens/merchant/PropertyLocationDetails';
-import PropertyAmenities from '../screens/merchant/PropertyAmenities';
-import Rooms from '../screens/merchant/Rooms';
+import MerchantDashboard from './MerchantDashboard';
+import PropertyInfo from './PropertyInfo';
+import PropertyLocationDetails from './PropertyLocationDetails';
+import PropertyAmenities from './PropertyAmenities';
 
 const Stack = createStackNavigator();
 
@@ -57,7 +56,6 @@ const MerchantStack = () => (
     <Stack.Screen name="PropertyInfo" component={PropertyInfo} />
     <Stack.Screen name="PropertyLocationDetails" component={PropertyLocationDetails} />
     <Stack.Screen name="PropertyAmenities" component={PropertyAmenities} />
-    <Stack.Screen name="Rooms" component={Rooms} />
   </Stack.Navigator>
 );
 
