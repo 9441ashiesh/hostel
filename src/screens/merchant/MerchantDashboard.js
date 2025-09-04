@@ -45,6 +45,15 @@ const MerchantDashboard = ({ navigation }) => {
       Alert.alert('Navigation Error', error.message);
     }
   };
+
+  const navigateToPhotosVideos = () => {
+    try {
+      navigation.navigate('PhotosVideos');
+    } catch (error) {
+      console.error('Navigation error:', error);
+      Alert.alert('Navigation Error', error.message);
+    }
+  };
   
   return (
     <MerchantLayout navigation={navigation} currentRoute="Dashboard">
@@ -96,7 +105,10 @@ const MerchantDashboard = ({ navigation }) => {
               <Text style={styles.quickAccessLabel}>Rooms</Text>
             </TouchableOpacity>
             
-            <TouchableOpacity style={styles.quickAccessItem}>
+            <TouchableOpacity 
+              style={styles.quickAccessItem}
+              onPress={navigateToPhotosVideos}
+            >
               <View style={styles.quickAccessIcon}>
                 <Text style={styles.iconText}>📷</Text>
               </View>

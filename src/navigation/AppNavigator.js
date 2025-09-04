@@ -20,6 +20,7 @@ import PropertyInfo from '../screens/merchant/PropertyInfo';
 import PropertyLocationDetails from '../screens/merchant/PropertyLocationDetails';
 import PropertyAmenities from '../screens/merchant/PropertyAmenities';
 import Rooms from '../screens/merchant/Rooms';
+import PhotosVideos from '../screens/merchant/PhotosVideos';
 
 const Stack = createStackNavigator();
 
@@ -58,6 +59,7 @@ const MerchantStack = () => (
     <Stack.Screen name="PropertyLocationDetails" component={PropertyLocationDetails} />
     <Stack.Screen name="PropertyAmenities" component={PropertyAmenities} />
     <Stack.Screen name="Rooms" component={Rooms} />
+    <Stack.Screen name="PhotosVideos" component={PhotosVideos} />
   </Stack.Navigator>
 );
 
