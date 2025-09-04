@@ -37,11 +37,13 @@ const PhoneSignup = ({ navigation, route }) => {
       
       // Determine user type automatically based on phone number
       const determineUserType = (phone) => {
-        // Simple logic: if entire phone number is 1 = user, if entire phone number is 2 = merchant
+        // Simple logic: 1 = user, 2 = merchant, 3 = admin
         if (phone === '1') {
           return 'user';
         } else if (phone === '2') {
           return 'merchant';
+        } else if (phone === '3') {
+          return 'admin';
         } else {
           // Default to user for all other numbers
           return 'user';
@@ -81,6 +83,9 @@ const PhoneSignup = ({ navigation, route }) => {
             <Text style={styles.title}>Signup</Text>
             <Text style={styles.subtitle}>
               Let's start with your phone number
+            </Text>
+            <Text style={styles.roleInfo}>
+              Enter 1 for User, 2 for Merchant, 3 for Admin
             </Text>
           </View>
 
@@ -165,6 +170,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#374151',
     textAlign: 'center',
+  },
+  roleInfo: {
+    fontSize: 14,
+    color: '#8b5cf6',
+    textAlign: 'center',
+    marginTop: 8,
+    fontWeight: '500',
   },
   inputContainer: {
     marginBottom: 24,

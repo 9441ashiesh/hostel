@@ -22,6 +22,11 @@ import PropertyAmenities from '../screens/merchant/PropertyAmenities';
 import Rooms from '../screens/merchant/Rooms';
 import PhotosVideos from '../screens/merchant/PhotosVideos';
 
+// Admin Screens
+import AdminDashboard from '../screens/admin/AdminDashboard';
+import UserManagement from '../screens/admin/UserManagement';
+import MerchantManagement from '../screens/admin/MerchantManagement';
+
 const Stack = createStackNavigator();
 
 const AuthStack = () => (
@@ -63,6 +68,18 @@ const MerchantStack = () => (
   </Stack.Navigator>
 );
 
+const AdminStack = () => (
+  <Stack.Navigator
+    screenOptions={{
+      headerShown: false,
+    }}
+  >
+    <Stack.Screen name="AdminDashboard" component={AdminDashboard} />
+    <Stack.Screen name="UserManagement" component={UserManagement} />
+    <Stack.Screen name="MerchantManagement" component={MerchantManagement} />
+  </Stack.Navigator>
+);
+
 const AppNavigator = () => {
   const { isAuthenticated, userType } = useAuth();
 
@@ -71,6 +88,8 @@ const AppNavigator = () => {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {!isAuthenticated ? (
           <Stack.Screen name="Auth" component={AuthStack} />
+        ) : userType === 'admin' ? (
+          <Stack.Screen name="AdminApp" component={AdminStack} />
         ) : userType === 'merchant' ? (
           <Stack.Screen name="MerchantApp" component={MerchantStack} />
         ) : (
