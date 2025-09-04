@@ -10,6 +10,9 @@ import OTPVerification from '../screens/auth/OTPVerification';
 
 // User Screens
 import UserDashboard from '../screens/user/UserDashboard';
+import ProfileScreen from '../screens/user/ProfileScreen';
+import LikesScreen from '../screens/user/LikesScreen';
+import HostelDetailScreen from '../screens/user/HostelDetailScreen';
 
 // Merchant Screens
 import MerchantDashboard from '../screens/merchant/MerchantDashboard';
@@ -34,6 +37,9 @@ const UserStack = () => (
     }}
   >
     <Stack.Screen name="UserDashboard" component={UserDashboard} />
+    <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+    <Stack.Screen name="LikesScreen" component={LikesScreen} />
+    <Stack.Screen name="HostelDetailScreen" component={HostelDetailScreen} />
   </Stack.Navigator>
 );
 

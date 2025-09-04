@@ -9,6 +9,7 @@ import {
   TextInput,
 } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
+import UserLayout from '../../components/layout/UserLayout';
 
 const UserDashboard = ({ navigation }) => {
   const { user, logout } = useAuth();
@@ -63,9 +64,10 @@ const UserDashboard = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
+    <UserLayout navigation={navigation} activeTab="home">
+      <SafeAreaView style={styles.container}>
+        {/* Header */}
+        <View style={styles.header}>
         <View style={styles.headerLeft}>
           <View style={styles.locationContainer}>
             <Text style={styles.locationIcon}>📍</Text>
@@ -131,7 +133,11 @@ const UserDashboard = ({ navigation }) => {
         {/* Hostels List */}
         <View style={styles.hostelsContainer}>
           {hostels.map((hostel) => (
-            <TouchableOpacity key={hostel.id} style={styles.hostelCard}>
+            <TouchableOpacity 
+              key={hostel.id} 
+              style={styles.hostelCard}
+              onPress={() => navigation.navigate('HostelDetailScreen', { hostel })}
+            >
               <View style={styles.hostelImageContainer}>
                 <Text style={styles.hostelImage}>{hostel.image}</Text>
                 <TouchableOpacity 
@@ -166,38 +172,8 @@ const UserDashboard = ({ navigation }) => {
           ))}
         </View>
       </ScrollView>
-
-      {/* Bottom Navigation */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem}>
-          <View style={styles.activeNavItem}>
-            <View style={styles.navIconContainer}>
-              <Text style={styles.activeNavIcon}>🏠</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <View style={styles.navIconContainer}>
-            <Text style={styles.navIcon}>❓</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <View style={styles.navIconContainer}>
-            <Text style={styles.navIcon}>📅</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <View style={styles.navIconContainer}>
-            <Text style={styles.navIcon}>🤍</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <View style={styles.navIconContainer}>
-            <Text style={styles.navIcon}>👤</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </UserLayout>
   );
 };
 
@@ -415,54 +391,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#6b7280',
     fontWeight: '500',
-  },
-  bottomNav: {
-    flexDirection: 'row',
-    backgroundColor: '#1a1a1a',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 25,
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: 20,
-    left: 20,
-    right: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
-  },
-  navItem: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  navIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  activeNavItem: {
-    backgroundColor: '#22c55e',
-    borderRadius: 20,
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  navIcon: {
-    fontSize: 18,
-    color: '#ffffff',
-  },
-  activeNavIcon: {
-    fontSize: 18,
-    color: '#ffffff',
   },
 });
 
