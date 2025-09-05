@@ -115,37 +115,6 @@ const MerchantDashboard = ({ navigation }) => {
               <Text style={styles.quickAccessLabel}>Photos &{'\n'}Videos</Text>
             </TouchableOpacity>
           </View>
-
-          {/* Second Row */}
-          <View style={styles.quickAccessRow}>
-            <TouchableOpacity style={styles.quickAccessItem}>
-              <View style={styles.quickAccessIcon}>
-                <Text style={styles.iconText}>🏠</Text>
-              </View>
-              <Text style={styles.quickAccessLabel}>HOLIDAYHOME</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity style={styles.quickAccessItem}>
-              <View style={styles.quickAccessIcon}>
-                <Text style={styles.iconText}>🏖️</Text>
-              </View>
-              <Text style={styles.quickAccessLabel}>Beach Fests</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity style={styles.quickAccessItem}>
-              <View style={styles.quickAccessIcon}>
-                <Text style={styles.iconText}>🎉</Text>
-              </View>
-              <Text style={styles.quickAccessLabel}>Events</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity style={styles.quickAccessItem}>
-              <View style={styles.quickAccessIcon}>
-                <Text style={styles.iconText}>🎯</Text>
-              </View>
-              <Text style={styles.quickAccessLabel}>Promotions</Text>
-            </TouchableOpacity>
-          </View>
         </View>
 
         {/* Today's Performance Section */}

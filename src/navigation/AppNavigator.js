@@ -14,9 +14,13 @@ import ProfileScreen from '../screens/user/ProfileScreen';
 import LikesScreen from '../screens/user/LikesScreen';
 import HostelDetailScreen from '../screens/user/HostelDetailScreen';
 import SearchScreen from '../screens/user/SearchScreen';
+import LocationSelectionScreen from '../screens/user/LocationSelectionScreen';
+import DateSelectionScreen from '../screens/user/DateSelectionScreen';
+import GuestSelectionScreen from '../screens/user/GuestSelectionScreen';
 
 // Merchant Screens
 import MerchantDashboard from '../screens/merchant/MerchantDashboard';
+import MerchantProfile from '../screens/merchant/MerchantProfile';
 import PropertyInfo from '../screens/merchant/PropertyInfo';
 import PropertyLocationDetails from '../screens/merchant/PropertyLocationDetails';
 import PropertyAmenities from '../screens/merchant/PropertyAmenities';
@@ -52,6 +56,9 @@ const UserStack = () => (
     <Stack.Screen name="LikesScreen" component={LikesScreen} />
     <Stack.Screen name="HostelDetailScreen" component={HostelDetailScreen} />
     <Stack.Screen name="SearchScreen" component={SearchScreen} />
+    <Stack.Screen name="LocationSelection" component={LocationSelectionScreen} />
+    <Stack.Screen name="DateSelection" component={DateSelectionScreen} />
+    <Stack.Screen name="GuestSelection" component={GuestSelectionScreen} />
   </Stack.Navigator>
 );
 
@@ -62,6 +69,7 @@ const MerchantStack = () => (
     }}
   >
     <Stack.Screen name="MerchantDashboard" component={MerchantDashboard} />
+    <Stack.Screen name="MerchantProfile" component={MerchantProfile} />
     <Stack.Screen name="PropertyInfo" component={PropertyInfo} />
     <Stack.Screen name="PropertyLocationDetails" component={PropertyLocationDetails} />
     <Stack.Screen name="PropertyAmenities" component={PropertyAmenities} />

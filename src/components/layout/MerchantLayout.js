@@ -20,6 +20,8 @@ const MerchantLayout = ({ children, navigation, currentRoute = 'Home' }) => {
       navigation.navigate('MerchantDashboard');
     } else if (screenName === 'PropertyInfo') {
       navigation.navigate('PropertyInfo');
+    } else if (screenName === 'Profile') {
+      navigation.navigate('MerchantProfile');
     } else if (screenName === 'Logout') {
       handleLogout();
     }

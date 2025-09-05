@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,13 +11,20 @@ import {
 } from 'react-native';
 import UserLayout from '../../components/layout/UserLayout';
 
-const SearchScreen = ({ navigation }) => {
+const SearchScreen = ({ navigation, route }) => {
   const [selectedTab, setSelectedTab] = useState('Hotels');
   const [checkIn, setCheckIn] = useState('26 Jan - 28 Feb');
-  const [guests, setGuests] = useState('1 Room, 1 Guest');
+  const [numberOfGuests, setNumberOfGuests] = useState(1);
   const [location, setLocation] = useState('Hyderabad');
 
-  const tabs = ['Hotels', 'Resorts', 'Hourstay'];
+  // Update guest count when returning from guest selection
+  useEffect(() => {
+    if (route.params?.selectedGuests) {
+      setNumberOfGuests(route.params.selectedGuests);
+    }
+  }, [route.params?.selectedGuests]);
+
+  const tabs = ['Hotels', 'Hourstay'];
 
   const nearbyHotels = [
     {
@@ -143,95 +150,109 @@ const SearchScreen = ({ navigation }) => {
   return (
     <UserLayout navigation={navigation} activeTab="search">
       <SafeAreaView style={styles.container}>
-        {/* Blue Header */}
-        <View style={styles.header}>
-          <View style={styles.headerTop}>
-            <Text style={styles.locationText}>📍 {location} ▼</Text>
-            <View style={styles.headerIcons}>
-              <TouchableOpacity style={styles.headerIcon}>
-                <Text style={styles.iconText}>📋</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.headerIcon}>
-                <Text style={styles.iconText}>🔔</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          {/* Search Tabs */}
-          <View style={styles.tabsContainer}>
-            {tabs.map((tab) => (
-              <TouchableOpacity
-                key={tab}
-                style={[
-                  styles.tab,
-                  selectedTab === tab && styles.activeTab
-                ]}
-                onPress={() => setSelectedTab(tab)}
-              >
-                <Text style={[
-                  styles.tabText,
-                  selectedTab === tab && styles.activeTabText
-                ]}>
-                  {tab}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-
-          {/* Search Card */}
-          <View style={styles.searchCard}>
-            <View style={styles.searchRow}>
-              <View style={styles.searchField}>
-                <Text style={styles.searchLabel}>Select location</Text>
-                <TouchableOpacity style={styles.locationSelector}>
-                  <Text style={styles.locationIcon}>📍</Text>
+        <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+          {/* Blue Header */}
+          <View style={styles.header}>
+            <View style={styles.headerTop}>
+              <Text style={styles.locationText}>📍 {location} ▼</Text>
+              <View style={styles.headerIcons}>
+                <TouchableOpacity style={styles.headerIcon}>
+                  <Text style={styles.iconText}>📋</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.headerIcon}>
+                  <Text style={styles.iconText}>🔔</Text>
                 </TouchableOpacity>
               </View>
             </View>
-            
-            <View style={styles.searchRow}>
-              <View style={styles.dateField}>
-                <Text style={styles.dateText}>{checkIn}</Text>
-                <Text style={styles.nightsText}>5 Nights</Text>
-              </View>
-              <View style={styles.guestField}>
-                <Text style={styles.guestText}>{guests}</Text>
-                <Text style={styles.guestSubText}>1 Adults</Text>
-              </View>
+
+            {/* Search Tabs */}
+            <View style={styles.tabsContainer}>
+              {tabs.map((tab) => (
+                <TouchableOpacity
+                  key={tab}
+                  style={[
+                    styles.tab,
+                    selectedTab === tab && styles.activeTab
+                  ]}
+                  onPress={() => setSelectedTab(tab)}
+                >
+                  <Text style={[
+                    styles.tabText,
+                    selectedTab === tab && styles.activeTabText
+                  ]}>
+                    {tab}
+                  </Text>
+                </TouchableOpacity>
+              ))}
             </View>
 
-            <TouchableOpacity style={styles.searchButton}>
-              <Text style={styles.searchButtonText}>Search</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          {/* Hotel Nearby */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Hotel Nearby</Text>
-            <FlatList
-              data={nearbyHotels}
-              renderItem={renderNearbyHotel}
-              keyExtractor={item => item.id.toString()}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.nearbyList}
-            />
-          </View>
-
-          {/* Recommendation */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Recommendation</Text>
-            {recommendations.map((item) => (
-              <View key={item.id}>
-                {renderRecommendation({ item })}
+            {/* Search Card */}
+            <View style={styles.searchCard}>
+              <View style={styles.locationRow}>
+                <Text style={styles.searchLabel}>Select location</Text>
+                <TouchableOpacity 
+                  style={styles.locationSelector}
+                  onPress={() => navigation.navigate('LocationSelection')}
+                >
+                  <Text style={styles.locationIcon}>📍</Text>
+                  <Text style={styles.locationText}>Choose destination</Text>
+                </TouchableOpacity>
               </View>
-            ))}
+              
+              <View style={styles.dateGuestRow}>
+                <TouchableOpacity 
+                  style={styles.dateSection}
+                  onPress={() => navigation.navigate('DateSelection')}
+                >
+                  <Text style={styles.dateText}>{checkIn}</Text>
+                  <Text style={styles.nightsText}>5 Nights</Text>
+                </TouchableOpacity>
+                
+                <View style={styles.divider} />
+                
+                <TouchableOpacity 
+                  style={styles.guestSection}
+                  onPress={() => navigation.navigate('GuestSelection')}
+                >
+                  <Text style={styles.guestText}>{numberOfGuests} {numberOfGuests === 1 ? 'Person' : 'People'}</Text>
+                  <Text style={styles.guestSubText}>{numberOfGuests} Guest{numberOfGuests !== 1 ? 's' : ''}</Text>
+                </TouchableOpacity>
+              </View>
+
+              <TouchableOpacity style={styles.searchButton}>
+                <Text style={styles.searchButtonText}>Search</Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
-          {/* Bottom Space for Navigation */}
-          <View style={styles.bottomSpace} />
+          {/* Content */}
+          <View style={styles.content}>
+            {/* Hotel Nearby */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Hotel Nearby</Text>
+              <FlatList
+                data={nearbyHotels}
+                renderItem={renderNearbyHotel}
+                keyExtractor={item => item.id.toString()}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.nearbyList}
+              />
+            </View>
+
+            {/* Recommendation */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Recommendation</Text>
+              {recommendations.map((item) => (
+                <View key={item.id}>
+                  {renderRecommendation({ item })}
+                </View>
+              ))}
+            </View>
+
+            {/* Bottom Space for Navigation */}
+            <View style={styles.bottomSpace} />
+          </View>
         </ScrollView>
       </SafeAreaView>
     </UserLayout>
@@ -244,7 +265,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8f9fa',
   },
   
-  // Header with Blue Background
+  scrollContainer: {
+    flex: 1,
+  },
+  
+  // Header with Blue Background (now scrollable)
   header: {
     backgroundColor: '#4A90E2',
     paddingBottom: 20,
@@ -319,12 +344,8 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 5,
   },
-  searchRow: {
-    flexDirection: 'row',
+  locationRow: {
     marginBottom: 16,
-  },
-  searchField: {
-    flex: 1,
   },
   searchLabel: {
     fontSize: 14,
@@ -334,15 +355,31 @@ const styles = StyleSheet.create({
   locationSelector: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    backgroundColor: '#F9FAFB',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
   },
   locationIcon: {
     fontSize: 18,
     color: '#4A90E2',
+    marginRight: 8,
   },
-  dateField: {
+  locationText: {
+    fontSize: 16,
+    color: '#6B7280',
     flex: 1,
-    marginRight: 16,
+  },
+  dateGuestRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  dateSection: {
+    flex: 1,
+    paddingVertical: 12,
   },
   dateText: {
     fontSize: 16,
@@ -354,8 +391,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#6B7280',
   },
-  guestField: {
+  divider: {
+    width: 1,
+    height: 40,
+    backgroundColor: '#E5E7EB',
+    marginHorizontal: 16,
+  },
+  guestSection: {
     flex: 1,
+    paddingVertical: 12,
   },
   guestText: {
     fontSize: 16,
@@ -372,7 +416,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
-    marginTop: 8,
   },
   searchButtonText: {
     fontSize: 16,
@@ -382,7 +425,7 @@ const styles = StyleSheet.create({
   
   // Content
   content: {
-    flex: 1,
+    backgroundColor: '#f8f9fa',
     paddingTop: 20,
   },
   section: {
