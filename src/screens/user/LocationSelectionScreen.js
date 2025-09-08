@@ -28,10 +28,17 @@ const LocationSelectionScreen = ({ navigation }) => {
     { id: 6, name: 'Hyderabad' },
   ];
 
+  const filteredCities = popularCities.filter(city =>
+    city.name.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  const filteredRecentSearches = recentSearches.filter(search =>
+    search.name.toLowerCase().includes(searchText.toLowerCase())
+  );
+
   const handleLocationSelect = (locationName) => {
     // Navigate back to search screen with selected location
-    navigation.goBack();
-    // You can pass the selected location back to the search screen
+    navigation.navigate('SearchScreen', { selectedLocation: locationName });
   };
 
   return (
@@ -75,24 +82,26 @@ const LocationSelectionScreen = ({ navigation }) => {
         </TouchableOpacity>
 
         {/* Recent Searches */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Recent Searches</Text>
-          {recentSearches.map((item) => (
-            <TouchableOpacity
-              key={item.id}
-              style={styles.locationItem}
-              onPress={() => handleLocationSelect(item.name)}
-            >
-              <Text style={styles.locationName}>{item.name}</Text>
-              <Text style={styles.locationType}>{item.type}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+        {filteredRecentSearches.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Recent Searches</Text>
+            {filteredRecentSearches.map((item) => (
+              <TouchableOpacity
+                key={item.id}
+                style={styles.locationItem}
+                onPress={() => handleLocationSelect(item.name)}
+              >
+                <Text style={styles.locationName}>{item.name}</Text>
+                <Text style={styles.locationType}>{item.type}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
 
         {/* Popular Cities */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Popular cities</Text>
-          {popularCities.map((item) => (
+          {filteredCities.map((item) => (
             <TouchableOpacity
               key={item.id}
               style={styles.locationItem}

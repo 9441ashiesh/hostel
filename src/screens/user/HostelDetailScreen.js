@@ -9,24 +9,30 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
+import { useFavorites } from '../../context/FavoritesContext';
 
 const { width } = Dimensions.get('window');
 
 const HostelDetailScreen = ({ navigation, route }) => {
   const { hostel } = route.params;
-  const [isLiked, setIsLiked] = useState(hostel.liked || false);
+  const { toggleFavorite, isFavorite } = useFavorites();
 
   const goBack = () => {
     navigation.goBack();
   };
 
-  const toggleLike = () => {
-    setIsLiked(!isLiked);
+  const handleToggleFavorite = () => {
+    toggleFavorite(hostel);
   };
 
   const handleBookNow = () => {
-    // Handle booking functionality
-    console.log('Book Now clicked');
+    // Navigate to booking screen with hostel data
+    navigation.navigate('BookingScreen', { 
+      hostel: hostel,
+      checkIn: '26 Jan',
+      checkOut: '28 Feb', 
+      guests: hostel.guests 
+    });
   };
 
   return (
@@ -37,9 +43,9 @@ const HostelDetailScreen = ({ navigation, route }) => {
             <TouchableOpacity style={styles.backButton} onPress={goBack}>
               <Text style={styles.backIcon}>←</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.likeButton} onPress={toggleLike}>
+            <TouchableOpacity style={styles.likeButton} onPress={handleToggleFavorite}>
               <Text style={styles.likeIcon}>
-                {isLiked ? '❤️' : '🤍'}
+                {isFavorite(hostel.id) ? '❤️' : '🤍'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -74,7 +80,7 @@ const HostelDetailScreen = ({ navigation, route }) => {
           <View style={styles.specificationsSection}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>Facility specifications</Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('FacilitiesScreen', { hostel })}>
                 <Text style={styles.seeAllText}>See all</Text>
               </TouchableOpacity>
             </View>

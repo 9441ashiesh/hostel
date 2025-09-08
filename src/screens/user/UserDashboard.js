@@ -9,16 +9,15 @@ import {
   TextInput,
 } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
+import { useFavorites } from '../../context/FavoritesContext';
 import UserLayout from '../../components/layout/UserLayout';
 
 const UserDashboard = ({ navigation }) => {
   const { user, logout } = useAuth();
+  const { toggleFavorite, isFavorite } = useFavorites();
   const [searchText, setSearchText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
-
-  const categories = ['All', 'Budget', 'Premium', 'Family', 'Solo'];
-
-  const hostels = [
+  const [hostelsData, setHostelsData] = useState([
     {
       id: 1,
       name: 'Backpacker Heaven',
@@ -52,16 +51,37 @@ const UserDashboard = ({ navigation }) => {
       location: 'Central',
       liked: false,
     },
-  ];
+  ]);
+
+  const categories = ['All', 'Budget', 'Premium', 'Family', 'Solo'];
+
+  const handleProfilePress = () => {
+    navigation.navigate('ProfileScreen');
+  };
+
+  const handleLocationPress = () => {
+    navigation.navigate('LocationSelectionScreen');
+  };
 
   const handleLogout = () => {
     logout();
     // No need to reset navigation, the AppNavigator will handle the route change
   };
 
-  const toggleLike = (id) => {
-    // Handle like functionality
+  const handleToggleFavorite = (hostel) => {
+    toggleFavorite(hostel);
   };
+
+  const filteredHostels = hostelsData.filter(hostel => {
+    const matchesSearch = hostel.name.toLowerCase().includes(searchText.toLowerCase()) ||
+                         hostel.location.toLowerCase().includes(searchText.toLowerCase());
+    const matchesCategory = selectedCategory === 'All' || 
+                           (selectedCategory === 'Budget' && parseInt(hostel.price.replace(/\D/g, '')) < 30) ||
+                           (selectedCategory === 'Premium' && parseInt(hostel.price.replace(/\D/g, '')) >= 35) ||
+                           (selectedCategory === 'Family' && hostel.guests >= 6) ||
+                           (selectedCategory === 'Solo' && hostel.guests <= 4);
+    return matchesSearch && matchesCategory;
+  });
 
   return (
     <UserLayout navigation={navigation} activeTab="home">
@@ -69,11 +89,11 @@ const UserDashboard = ({ navigation }) => {
         {/* Header */}
         <View style={styles.header}>
         <View style={styles.headerLeft}>
-          <View style={styles.locationContainer}>
+          <TouchableOpacity style={styles.locationContainer} onPress={handleLocationPress}>
             <Text style={styles.locationIcon}>📍</Text>
             <Text style={styles.locationText}>Indonesia</Text>
             <Text style={styles.dropdownIcon}>▼</Text>
-          </View>
+          </TouchableOpacity>
           <View style={styles.greetingContainer}>
             <Text style={styles.greetingText}>Good Morning,</Text>
             <View style={styles.nameContainer}>
@@ -82,7 +102,7 @@ const UserDashboard = ({ navigation }) => {
             </View>
           </View>
         </View>
-        <TouchableOpacity style={styles.profileContainer} onPress={handleLogout}>
+        <TouchableOpacity style={styles.profileContainer} onPress={handleProfilePress}>
           <View style={styles.profileImage}>
             <Text style={styles.profileText}>M</Text>
           </View>
@@ -132,7 +152,7 @@ const UserDashboard = ({ navigation }) => {
 
         {/* Hostels List */}
         <View style={styles.hostelsContainer}>
-          {hostels.map((hostel) => (
+          {filteredHostels.map((hostel) => (
             <TouchableOpacity 
               key={hostel.id} 
               style={styles.hostelCard}
@@ -142,10 +162,10 @@ const UserDashboard = ({ navigation }) => {
                 <Text style={styles.hostelImage}>{hostel.image}</Text>
                 <TouchableOpacity 
                   style={styles.likeButton}
-                  onPress={() => toggleLike(hostel.id)}
+                  onPress={() => handleToggleFavorite(hostel)}
                 >
                   <Text style={styles.likeIcon}>
-                    {hostel.liked ? '❤️' : '🤍'}
+                    {isFavorite(hostel.id) ? '❤️' : '🤍'}
                   </Text>
                 </TouchableOpacity>
               </View>

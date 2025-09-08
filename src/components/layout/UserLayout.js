@@ -70,20 +70,7 @@ const UserLayout = ({ children, navigation, activeTab = 'home' }) => {
             </View>
           )}
         </TouchableOpacity>
-        
-        <TouchableOpacity style={styles.navItem} onPress={navigateToBookings}>
-          {activeTab === 'bookings' ? (
-            <View style={styles.activeNavItem}>
-              <View style={styles.navIconContainer}>
-                <Text style={styles.activeNavIcon}>📅</Text>
-              </View>
-            </View>
-          ) : (
-            <View style={styles.navIconContainer}>
-              <Text style={styles.navIcon}>📅</Text>
-            </View>
-          )}
-        </TouchableOpacity>
+      
         
         <TouchableOpacity style={styles.navItem} onPress={navigateToLikes}>
           {activeTab === 'likes' ? (

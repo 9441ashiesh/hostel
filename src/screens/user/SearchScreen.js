@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import {
   View,
   Text,
@@ -8,21 +9,36 @@ import {
   ScrollView,
   FlatList,
   Image,
+  Alert,
 } from 'react-native';
 import UserLayout from '../../components/layout/UserLayout';
+import { useFavorites } from '../../context/FavoritesContext';
 
 const SearchScreen = ({ navigation, route }) => {
+  const { toggleFavorite, isFavorite } = useFavorites();
   const [selectedTab, setSelectedTab] = useState('Hotels');
   const [checkIn, setCheckIn] = useState('26 Jan - 28 Feb');
   const [numberOfGuests, setNumberOfGuests] = useState(1);
   const [location, setLocation] = useState('Hyderabad');
 
-  // Update guest count when returning from guest selection
+  // Update guest count and location when returning from selection screens
   useEffect(() => {
     if (route.params?.selectedGuests) {
       setNumberOfGuests(route.params.selectedGuests);
     }
-  }, [route.params?.selectedGuests]);
+    if (route.params?.selectedLocation) {
+      setLocation(route.params.selectedLocation);
+    }
+  }, [route.params?.selectedGuests, route.params?.selectedLocation]);
+
+  const handleSearch = () => {
+    navigation.navigate('SearchResultsScreen', {
+      location: location,
+      checkIn: checkIn,
+      guests: numberOfGuests,
+      selectedTab: selectedTab
+    });
+  };
 
   const tabs = ['Hotels', 'Hourstay'];
 
@@ -32,7 +48,7 @@ const SearchScreen = ({ navigation, route }) => {
       name: 'BeachSide Resort',
       rating: 4.2,
       reviews: 1520,
-      price: 950,
+      price: '950',
       image: 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
       featured: true,
     },
@@ -41,7 +57,7 @@ const SearchScreen = ({ navigation, route }) => {
       name: 'Coral Resorts',
       rating: 4.5,
       reviews: 850,
-      price: 890,
+      price: '890',
       image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
       featured: true,
     },
@@ -50,7 +66,7 @@ const SearchScreen = ({ navigation, route }) => {
       name: 'Palm Beach Hotel',
       rating: 4.3,
       reviews: 1205,
-      price: 1200,
+      price: '1200',
       image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
       featured: true,
     },
@@ -62,7 +78,7 @@ const SearchScreen = ({ navigation, route }) => {
       name: 'Hotel Best Auto Hopper',
       rating: 4.8,
       reviews: 850,
-      price: 990,
+      price: '990',
       image: 'https://images.unsplash.com/photo-1455587734955-081b22074882?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
       location: 'Delhi',
     },
@@ -71,7 +87,7 @@ const SearchScreen = ({ navigation, route }) => {
       name: 'Deco Boutique Hotel',
       rating: 4.5,
       reviews: 1205,
-      price: 900,
+      price: '900',
       image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
       location: 'Mumbai',
     },
@@ -80,7 +96,7 @@ const SearchScreen = ({ navigation, route }) => {
       name: 'Kenting Amanda Hotel',
       rating: 4.2,
       reviews: 750,
-      price: 750,
+      price: '750',
       image: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
       location: 'Bangalore',
     },
@@ -89,22 +105,31 @@ const SearchScreen = ({ navigation, route }) => {
       name: 'Le Dommarin Hotel',
       rating: 4.0,
       reviews: 650,
-      price: 430,
+      price: '430',
       image: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
       location: 'Chennai',
     },
   ];
 
   const renderNearbyHotel = ({ item }) => (
-    <TouchableOpacity style={styles.nearbyCard}>
+    <TouchableOpacity 
+      style={styles.nearbyCard}
+      onPress={() => navigation.navigate('HostelDetailScreen', { hostel: item })}
+    >
       <View style={styles.nearbyImageContainer}>
         <Image 
           source={{ uri: item.image }} 
           style={styles.nearbyImageStyle}
           resizeMode="cover"
         />
-        <TouchableOpacity style={styles.favoriteButton}>
-          <Text style={styles.favoriteIcon}>🤍</Text>
+        <TouchableOpacity 
+          style={[styles.favoriteButton, { zIndex: 1 }]}
+          onPress={() => toggleFavorite(item)}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.favoriteIcon}>
+            {isFavorite(item.id) ? '❤️' : '🤍'}
+          </Text>
         </TouchableOpacity>
         <View style={styles.priceTag}>
           <Text style={styles.priceTagText}>₹{item.price}</Text>
@@ -121,15 +146,24 @@ const SearchScreen = ({ navigation, route }) => {
   );
 
   const renderRecommendation = ({ item }) => (
-    <TouchableOpacity style={styles.recommendationCard}>
+    <TouchableOpacity 
+      style={styles.recommendationCard}
+      onPress={() => navigation.navigate('HostelDetailScreen', { hostel: item })}
+    >
       <View style={styles.recommendationImageContainer}>
         <Image 
           source={{ uri: item.image }} 
           style={styles.recommendationImageStyle}
           resizeMode="cover"
         />
-        <TouchableOpacity style={styles.favoriteButtonSmall}>
-          <Text style={styles.favoriteIconSmall}>🤍</Text>
+        <TouchableOpacity 
+          style={styles.favoriteButtonSmall}
+          onPress={() => toggleFavorite(item)}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.favoriteIconSmall}>
+            {isFavorite(item.id) ? '❤️' : '🤍'}
+          </Text>
         </TouchableOpacity>
       </View>
       <View style={styles.recommendationInfo}>
@@ -192,10 +226,10 @@ const SearchScreen = ({ navigation, route }) => {
                 <Text style={styles.searchLabel}>Select location</Text>
                 <TouchableOpacity 
                   style={styles.locationSelector}
-                  onPress={() => navigation.navigate('LocationSelection')}
+                  onPress={() => navigation.navigate('LocationSelectionScreen')}
                 >
                   <Text style={styles.locationIcon}>📍</Text>
-                  <Text style={styles.locationText}>Choose destination</Text>
+                  <Text style={styles.selectedLocationText}>{location}</Text>
                 </TouchableOpacity>
               </View>
               
@@ -219,7 +253,10 @@ const SearchScreen = ({ navigation, route }) => {
                 </TouchableOpacity>
               </View>
 
-              <TouchableOpacity style={styles.searchButton}>
+              <TouchableOpacity 
+                style={styles.searchButton}
+                onPress={handleSearch}
+              >
                 <Text style={styles.searchButtonText}>Search</Text>
               </TouchableOpacity>
             </View>
@@ -372,6 +409,12 @@ const styles = StyleSheet.create({
     color: '#6B7280',
     flex: 1,
   },
+  selectedLocationText: {
+    fontSize: 16,
+    color: '#1F2937',
+    fontWeight: '600',
+    flex: 1,
+  },
   dateGuestRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -476,6 +519,8 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 10,
+    elevation: 5,
   },
   favoriteIcon: {
     fontSize: 16,
@@ -556,6 +601,8 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 10,
+    elevation: 5,
   },
   favoriteIconSmall: {
     fontSize: 12,

@@ -9,51 +9,17 @@ import {
   FlatList,
 } from 'react-native';
 import UserLayout from '../../components/layout/UserLayout';
+import { useFavorites } from '../../context/FavoritesContext';
 
 const LikesScreen = ({ navigation }) => {
-  const [likedHostels] = useState([
-    {
-      id: 1,
-      name: 'Mountain View Hostel',
-      price: '$35/night',
-      year: '2022',
-      rating: 4.8,
-      guests: 4,
-      image: '🏔️',
-      location: 'Hills',
-      liked: true,
-    },
-    {
-      id: 2,
-      name: 'Beach Paradise Lodge',
-      price: '$40/night',
-      year: '2023',
-      rating: 4.6,
-      guests: 8,
-      image: '🏖️',
-      location: 'Coastal',
-      liked: true,
-    },
-    {
-      id: 3,
-      name: 'Urban Backpackers',
-      price: '$28/night',
-      year: '2023',
-      rating: 4.4,
-      guests: 6,
-      image: '🏙️',
-      location: 'Downtown',
-      liked: true,
-    },
-  ]);
+  const { likedHotels, removeFavorite } = useFavorites();
 
   const goBack = () => {
     navigation.goBack();
   };
 
-  const toggleLike = (id) => {
-    // Handle unlike functionality
-    console.log('Toggle like for hostel:', id);
+  const handleRemoveFavorite = (id) => {
+    removeFavorite(id);
   };
 
   const renderHostelCard = ({ item }) => (
@@ -62,10 +28,10 @@ const LikesScreen = ({ navigation }) => {
       onPress={() => navigation.navigate('HostelDetailScreen', { hostel: item })}
     >
       <View style={styles.hostelImageContainer}>
-        <Text style={styles.hostelImage}>{item.image}</Text>
+        <Text style={styles.hostelImage}>🏨</Text>
         <TouchableOpacity 
           style={styles.likeButton}
-          onPress={() => toggleLike(item.id)}
+          onPress={() => handleRemoveFavorite(item.id)}
         >
           <Text style={styles.likeIcon}>❤️</Text>
         </TouchableOpacity>
@@ -74,9 +40,8 @@ const LikesScreen = ({ navigation }) => {
       <View style={styles.hostelInfo}>
         <View style={styles.hostelHeader}>
           <Text style={styles.hostelName}>{item.name}</Text>
-          <Text style={styles.hostelPrice}>{item.price}</Text>
+          <Text style={styles.hostelPrice}>₹{item.price}</Text>
         </View>
-        <Text style={styles.hostelYear}>{item.year}</Text>
         
         <View style={styles.hostelStats}>
           <View style={styles.statItem}>
@@ -84,12 +49,12 @@ const LikesScreen = ({ navigation }) => {
             <Text style={styles.statText}>{item.rating}</Text>
           </View>
           <View style={styles.statItem}>
-            <Text style={styles.statIcon}>👥</Text>
-            <Text style={styles.statText}>{item.guests}</Text>
+            <Text style={styles.statIcon}>�</Text>
+            <Text style={styles.statText}>{item.reviews} reviews</Text>
           </View>
           <View style={styles.statItem}>
             <Text style={styles.statIcon}>📍</Text>
-            <Text style={styles.statText}>{item.location}</Text>
+            <Text style={styles.statText}>{item.location || 'City'}</Text>
           </View>
         </View>
       </View>
@@ -110,16 +75,16 @@ const LikesScreen = ({ navigation }) => {
 
       {/* Content */}
       <View style={styles.content}>
-        {likedHostels.length > 0 ? (
+        {likedHotels.length > 0 ? (
           <>
             <View style={styles.statsContainer}>
               <Text style={styles.statsText}>
-                {likedHostels.length} saved hostel{likedHostels.length !== 1 ? 's' : ''}
+                {likedHotels.length} saved hostel{likedHotels.length !== 1 ? 's' : ''}
               </Text>
             </View>
             
             <FlatList
-              data={likedHostels}
+              data={likedHotels}
               renderItem={renderHostelCard}
               keyExtractor={(item) => item.id.toString()}
               showsVerticalScrollIndicator={false}
