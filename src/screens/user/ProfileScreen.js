@@ -37,15 +37,15 @@ const ProfileScreen = ({ navigation }) => {
   };
 
   const handleEditProfile = () => {
-    Alert.alert("Coming Soon", "Edit Profile feature will be available soon!");
+    navigation.navigate('EditProfileScreen');
   };
 
   const handleMyBookings = () => {
-    Alert.alert("Coming Soon", "My Bookings feature will be available soon!");
+    navigation.navigate('MyBookingsScreen');
   };
 
   const handlePaymentMethods = () => {
-    Alert.alert("Coming Soon", "Payment Methods feature will be available soon!");
+    navigation.navigate('PaymentMethodsScreen');
   };
 
   const handleHelpSupport = () => {
@@ -95,14 +95,14 @@ const ProfileScreen = ({ navigation }) => {
       id: 6, 
       title: 'Privacy Policy', 
       icon: '🔒', 
-      action: () => Alert.alert("Privacy Policy", "Privacy Policy will be displayed here."),
+      action: () => navigation.navigate('PrivacyPolicyScreen'),
       description: 'Read our privacy policy'
     },
     { 
       id: 7, 
       title: 'Terms of Service', 
       icon: '📋', 
-      action: () => Alert.alert("Terms of Service", "Terms of Service will be displayed here."),
+      action: () => navigation.navigate('TermsOfServiceScreen'),
       description: 'View our terms and conditions'
     },
   ];

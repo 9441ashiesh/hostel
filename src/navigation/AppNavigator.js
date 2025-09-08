@@ -11,6 +11,11 @@ import OTPVerification from '../screens/auth/OTPVerification';
 // User Screens
 import UserDashboard from '../screens/user/UserDashboard';
 import ProfileScreen from '../screens/user/ProfileScreen';
+import EditProfileScreen from '../screens/user/EditProfileScreen';
+import MyBookingsScreen from '../screens/user/MyBookingsScreen';
+import PaymentMethodsScreen from '../screens/user/PaymentMethodsScreen';
+import PrivacyPolicyScreen from '../screens/user/PrivacyPolicyScreen';
+import TermsOfServiceScreen from '../screens/user/TermsOfServiceScreen';
 import LikesScreen from '../screens/user/LikesScreen';
 import HostelDetailScreen from '../screens/user/HostelDetailScreen';
 import SearchScreen from '../screens/user/SearchScreen';
@@ -55,6 +60,11 @@ const UserStack = () => (
   >
     <Stack.Screen name="UserDashboard" component={UserDashboard} />
     <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+    <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
+    <Stack.Screen name="MyBookingsScreen" component={MyBookingsScreen} />
+    <Stack.Screen name="PaymentMethodsScreen" component={PaymentMethodsScreen} />
+    <Stack.Screen name="PrivacyPolicyScreen" component={PrivacyPolicyScreen} />
+    <Stack.Screen name="TermsOfServiceScreen" component={TermsOfServiceScreen} />
     <Stack.Screen name="LikesScreen" component={LikesScreen} />
     <Stack.Screen name="HostelDetailScreen" component={HostelDetailScreen} />
     <Stack.Screen name="SearchScreen" component={SearchScreen} />

@@ -57,7 +57,7 @@ const MerchantLayout = ({ children, navigation, currentRoute = 'Home' }) => {
           ]}>Home</Text>
         </TouchableOpacity>
         
-        <TouchableOpacity 
+        {/* <TouchableOpacity 
           style={styles.navItem}
           onPress={() => navigateToScreen('Analytics')}
           activeOpacity={0.7}
@@ -75,10 +75,10 @@ const MerchantLayout = ({ children, navigation, currentRoute = 'Home' }) => {
             styles.navLabel,
             currentRoute === 'Analytics' && styles.activeNavLabel
           ]}>Analytics</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         
         {/* Center Highlighted Button */}
-        <TouchableOpacity 
+        {/* <TouchableOpacity 
           style={styles.centerNavItem}
           onPress={() => navigateToScreen('PropertyInfo')}
           activeOpacity={0.8}
@@ -86,7 +86,7 @@ const MerchantLayout = ({ children, navigation, currentRoute = 'Home' }) => {
           <View style={styles.centerNavButton}>
             <Text style={styles.centerNavIcon}>+</Text>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         
         <TouchableOpacity 
           style={styles.navItem}

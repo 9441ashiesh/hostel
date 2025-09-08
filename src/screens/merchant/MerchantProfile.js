@@ -6,11 +6,10 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
-  Image,
-  TextInput,
   Alert,
 } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
+import MerchantLayout from '../../components/layout/MerchantLayout';
 
 const MerchantProfile = ({ navigation }) => {
   const { user, logout } = useAuth();
