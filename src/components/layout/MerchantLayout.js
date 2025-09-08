@@ -20,6 +20,8 @@ const MerchantLayout = ({ children, navigation, currentRoute = 'Home' }) => {
       navigation.navigate('MerchantDashboard');
     } else if (screenName === 'PropertyInfo') {
       navigation.navigate('PropertyInfo');
+    } else if (screenName === 'Analytics') {
+      navigation.navigate('MerchantAnalytics');
     } else if (screenName === 'Profile') {
       navigation.navigate('MerchantProfile');
     } else if (screenName === 'Logout') {
@@ -57,7 +59,7 @@ const MerchantLayout = ({ children, navigation, currentRoute = 'Home' }) => {
           ]}>Home</Text>
         </TouchableOpacity>
         
-        {/* <TouchableOpacity 
+        <TouchableOpacity 
           style={styles.navItem}
           onPress={() => navigateToScreen('Analytics')}
           activeOpacity={0.7}
@@ -75,7 +77,7 @@ const MerchantLayout = ({ children, navigation, currentRoute = 'Home' }) => {
             styles.navLabel,
             currentRoute === 'Analytics' && styles.activeNavLabel
           ]}>Analytics</Text>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
         
         {/* Center Highlighted Button */}
         {/* <TouchableOpacity 

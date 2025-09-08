@@ -28,6 +28,7 @@ import BookingScreen from '../screens/user/BookingScreen';
 // Merchant Screens
 import MerchantDashboard from '../screens/merchant/MerchantDashboard';
 import MerchantProfile from '../screens/merchant/MerchantProfile';
+import MerchantAnalytics from '../screens/merchant/MerchantAnalytics';
 import PropertyInfo from '../screens/merchant/PropertyInfo';
 import PropertyLocationDetails from '../screens/merchant/PropertyLocationDetails';
 import PropertyAmenities from '../screens/merchant/PropertyAmenities';
@@ -84,6 +85,7 @@ const MerchantStack = () => (
   >
     <Stack.Screen name="MerchantDashboard" component={MerchantDashboard} />
     <Stack.Screen name="MerchantProfile" component={MerchantProfile} />
+    <Stack.Screen name="MerchantAnalytics" component={MerchantAnalytics} />
     <Stack.Screen name="PropertyInfo" component={PropertyInfo} />
     <Stack.Screen name="PropertyLocationDetails" component={PropertyLocationDetails} />
     <Stack.Screen name="PropertyAmenities" component={PropertyAmenities} />
