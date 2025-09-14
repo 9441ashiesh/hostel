@@ -5,12 +5,12 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView,
   ScrollView,
   FlatList,
   Image,
   Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import UserLayout from '../../components/layout/UserLayout';
 import { useFavorites } from '../../context/FavoritesContext';
 

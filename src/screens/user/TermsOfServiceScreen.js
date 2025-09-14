@@ -4,9 +4,9 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView,
   ScrollView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import UserLayout from '../../components/layout/UserLayout';
 
 const TermsOfServiceScreen = ({ navigation }) => {
