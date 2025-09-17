@@ -24,6 +24,7 @@ import LocationSelectionScreen from '../screens/user/LocationSelectionScreen';
 import DateSelectionScreen from '../screens/user/DateSelectionScreen';
 import GuestSelectionScreen from '../screens/user/GuestSelectionScreen';
 import BookingScreen from '../screens/user/BookingScreen';
+import SignupScreen from '../screens/auth/SignupScreen' ;
 
 // Merchant Screens
 import MerchantDashboard from '../screens/merchant/MerchantDashboard';
@@ -50,6 +51,7 @@ const AuthStack = () => (
     initialRouteName="PhoneSignup"
   >
     <Stack.Screen name="PhoneSignup" component={PhoneSignup} />
+    <Stack.Screen name="SignupScreen" component={SignupScreen} />
   </Stack.Navigator>
 );
 
@@ -74,6 +76,7 @@ const UserStack = () => (
     <Stack.Screen name="DateSelectionScreen" component={DateSelectionScreen} />
     <Stack.Screen name="GuestSelectionScreen" component={GuestSelectionScreen} />
     <Stack.Screen name="BookingScreen" component={BookingScreen} />
+    <Stack.Screen name="SignupScreen" component={SignupScreen} />
   </Stack.Navigator>
 );
 

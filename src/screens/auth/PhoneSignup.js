@@ -72,7 +72,6 @@ const PhoneSignup = ({ navigation, route }) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#f8f9ff" />
-      
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardView}
@@ -128,6 +127,10 @@ const PhoneSignup = ({ navigation, route }) => {
             <Text style={styles.googleButtonText}>🔍 Continue with google</Text>
           </TouchableOpacity>
 
+          {/* Registration Link */}
+          <TouchableOpacity style={styles.linkButton} onPress={() => navigation.navigate('SignupScreen')}>
+            <Text style={styles.linkText}>Don't have an account? Register</Text>
+          </TouchableOpacity>
           {/* Footer */}
           <View style={styles.footer}>
             <Text style={styles.footerText}>
@@ -144,6 +147,16 @@ const PhoneSignup = ({ navigation, route }) => {
 };
 
 const styles = StyleSheet.create({
+  linkButton: {
+    marginTop: 16,
+    alignItems: 'center',
+  },
+  linkText: {
+    color: '#6366f1',
+    fontSize: 15,
+    fontWeight: '500',
+    textDecorationLine: 'underline',
+  },
   container: {
     flex: 1,
     backgroundColor: '#f8f9ff',
