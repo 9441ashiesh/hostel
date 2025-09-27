@@ -1,658 +1,508 @@
-import React, { useState, useEffect } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
+import React from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  FlatList,
+  TextInput,
   Image,
-  Alert,
+  StatusBar,
+  ActivityIndicator,
+  Keyboard,
+  Platform,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import UserLayout from '../../components/layout/UserLayout';
-import { useFavorites } from '../../context/FavoritesContext';
 
-const SearchScreen = ({ navigation, route }) => {
-  const { toggleFavorite, isFavorite } = useFavorites();
-  const [selectedTab, setSelectedTab] = useState('Hotels');
-  const [checkIn, setCheckIn] = useState('26 Jan - 28 Feb');
-  const [numberOfGuests, setNumberOfGuests] = useState(1);
-  const [location, setLocation] = useState('Hyderabad');
+const SearchScreen = ({ navigation }) => {
+  const [isKeyboardVisible, setKeyboardVisible] = React.useState(false);
+  const [imageLoading, setImageLoading] = React.useState({});
 
-  // Update guest count and location when returning from selection screens
-  useEffect(() => {
-    if (route.params?.selectedGuests) {
-      setNumberOfGuests(route.params.selectedGuests);
-    }
-    if (route.params?.selectedLocation) {
-      setLocation(route.params.selectedLocation);
-    }
-  }, [route.params?.selectedGuests, route.params?.selectedLocation]);
+  React.useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true);
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false);
+      }
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
 
   const handleSearch = () => {
-    navigation.navigate('SearchResultsScreen', {
-      location: location,
-      checkIn: checkIn,
-      guests: numberOfGuests,
-      selectedTab: selectedTab
-    });
+    Keyboard.dismiss();
+    // Add your search logic here
   };
-
-  const tabs = ['Hotels', 'Hourstay'];
-
-  const nearbyHotels = [
-    {
-      id: 1,
-      name: 'BeachSide Resort',
-      rating: 4.2,
-      reviews: 1520,
-      price: '950',
-      image: 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
-      featured: true,
-    },
-    {
-      id: 2,
-      name: 'Coral Resorts',
-      rating: 4.5,
-      reviews: 850,
-      price: '890',
-      image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
-      featured: true,
-    },
-    {
-      id: 3,
-      name: 'Palm Beach Hotel',
-      rating: 4.3,
-      reviews: 1205,
-      price: '1200',
-      image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
-      featured: true,
-    },
-  ];
-
-  const recommendations = [
-    {
-      id: 1,
-      name: 'Hotel Best Auto Hopper',
-      rating: 4.8,
-      reviews: 850,
-      price: '990',
-      image: 'https://images.unsplash.com/photo-1455587734955-081b22074882?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
-      location: 'Delhi',
-    },
-    {
-      id: 2,
-      name: 'Deco Boutique Hotel',
-      rating: 4.5,
-      reviews: 1205,
-      price: '900',
-      image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
-      location: 'Mumbai',
-    },
-    {
-      id: 3,
-      name: 'Kenting Amanda Hotel',
-      rating: 4.2,
-      reviews: 750,
-      price: '750',
-      image: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
-      location: 'Bangalore',
-    },
-    {
-      id: 4,
-      name: 'Le Dommarin Hotel',
-      rating: 4.0,
-      reviews: 650,
-      price: '430',
-      image: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
-      location: 'Chennai',
-    },
-  ];
-
-  const renderNearbyHotel = ({ item }) => (
-    <TouchableOpacity 
-      style={styles.nearbyCard}
-      onPress={() => navigation.navigate('HostelDetailScreen', { hostel: item })}
-    >
-      <View style={styles.nearbyImageContainer}>
-        <Image 
-          source={{ uri: item.image }} 
-          style={styles.nearbyImageStyle}
-          resizeMode="cover"
-        />
-        <TouchableOpacity 
-          style={[styles.favoriteButton, { zIndex: 1 }]}
-          onPress={() => toggleFavorite(item)}
-          activeOpacity={0.7}
-        >
-          <Text style={styles.favoriteIcon}>
-            {isFavorite(item.id) ? '❤️' : '🤍'}
-          </Text>
-        </TouchableOpacity>
-        <View style={styles.priceTag}>
-          <Text style={styles.priceTagText}>₹{item.price}</Text>
-        </View>
-      </View>
-      <View style={styles.nearbyInfo}>
-        <Text style={styles.nearbyName}>{item.name}</Text>
-        <View style={styles.nearbyRating}>
-          <Text style={styles.ratingText}>⭐ {item.rating}</Text>
-          <Text style={styles.reviewsText}>({item.reviews})</Text>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
-
-  const renderRecommendation = ({ item }) => (
-    <TouchableOpacity 
-      style={styles.recommendationCard}
-      onPress={() => navigation.navigate('HostelDetailScreen', { hostel: item })}
-    >
-      <View style={styles.recommendationImageContainer}>
-        <Image 
-          source={{ uri: item.image }} 
-          style={styles.recommendationImageStyle}
-          resizeMode="cover"
-        />
-        <TouchableOpacity 
-          style={styles.favoriteButtonSmall}
-          onPress={() => toggleFavorite(item)}
-          activeOpacity={0.7}
-        >
-          <Text style={styles.favoriteIconSmall}>
-            {isFavorite(item.id) ? '❤️' : '🤍'}
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.recommendationInfo}>
-        <Text style={styles.recommendationName}>{item.name}</Text>
-        <View style={styles.recommendationRating}>
-          <Text style={styles.ratingStars}>⭐ {item.rating}</Text>
-          <Text style={styles.reviewCount}>({item.reviews} reviews)</Text>
-        </View>
-        <Text style={styles.recommendationLocation}>📍 {item.location}</Text>
-        <View style={styles.priceContainer}>
-          <Text style={styles.priceText}>₹{item.price}</Text>
-          <Text style={styles.priceLabel}>/night</Text>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
 
   return (
     <UserLayout navigation={navigation} activeTab="search">
-      <SafeAreaView style={styles.container}>
-        <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
-          {/* Blue Header */}
-          <View style={styles.header}>
-            <View style={styles.headerTop}>
-              <Text style={styles.locationText}>📍 {location} ▼</Text>
-              <View style={styles.headerIcons}>
-                <TouchableOpacity style={styles.headerIcon}>
-                  <Text style={styles.iconText}>📋</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.headerIcon}>
-                  <Text style={styles.iconText}>🔔</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            {/* Search Tabs */}
-            <View style={styles.tabsContainer}>
-              {tabs.map((tab) => (
-                <TouchableOpacity
-                  key={tab}
-                  style={[
-                    styles.tab,
-                    selectedTab === tab && styles.activeTab
-                  ]}
-                  onPress={() => setSelectedTab(tab)}
-                >
-                  <Text style={[
-                    styles.tabText,
-                    selectedTab === tab && styles.activeTabText
-                  ]}>
-                    {tab}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-
-            {/* Search Card */}
-            <View style={styles.searchCard}>
-              <View style={styles.locationRow}>
-                <Text style={styles.searchLabel}>Select location</Text>
-                <TouchableOpacity 
-                  style={styles.locationSelector}
-                  onPress={() => navigation.navigate('LocationSelectionScreen')}
-                >
-                  <Text style={styles.locationIcon}>📍</Text>
-                  <Text style={styles.selectedLocationText}>{location}</Text>
-                </TouchableOpacity>
-              </View>
-              
-              <View style={styles.dateGuestRow}>
-                <TouchableOpacity 
-                  style={styles.dateSection}
-                  onPress={() => navigation.navigate('DateSelection')}
-                >
-                  <Text style={styles.dateText}>{checkIn}</Text>
-                  <Text style={styles.nightsText}>5 Nights</Text>
-                </TouchableOpacity>
-                
-                <View style={styles.divider} />
-                
-                <TouchableOpacity 
-                  style={styles.guestSection}
-                  onPress={() => navigation.navigate('GuestSelection')}
-                >
-                  <Text style={styles.guestText}>{numberOfGuests} {numberOfGuests === 1 ? 'Person' : 'People'}</Text>
-                  <Text style={styles.guestSubText}>{numberOfGuests} Guest{numberOfGuests !== 1 ? 's' : ''}</Text>
-                </TouchableOpacity>
-              </View>
-
-              <TouchableOpacity 
-                style={styles.searchButton}
-                onPress={handleSearch}
-              >
-                <Text style={styles.searchButtonText}>Search</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          {/* Content */}
-          <View style={styles.content}>
-            {/* Hotel Nearby */}
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Hotel Nearby</Text>
-              <FlatList
-                data={nearbyHotels}
-                renderItem={renderNearbyHotel}
-                keyExtractor={item => item.id.toString()}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.nearbyList}
-              />
-            </View>
-
-            {/* Recommendation */}
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Recommendation</Text>
-              {recommendations.map((item) => (
-                <View key={item.id}>
-                  {renderRecommendation({ item })}
+      <SafeAreaView 
+        style={styles.safeArea}
+        edges={['top', 'right', 'left']}
+      >
+        <StatusBar barStyle="dark-content" backgroundColor="#F5F7FA" />
+        <KeyboardAvoidingView 
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{ flex: 1 }}
+        >
+          <ScrollView 
+            style={styles.scrollContainer} 
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+          >
+            <View style={styles.container}>
+              {/* Header */}
+              <View style={styles.header}>
+                <View>
+                  <Text style={styles.greeting}>Hey Hasna👋</Text>
+                  <Text style={styles.welcomeText}>Let's start your journey!</Text>
                 </View>
-              ))}
-            </View>
+                <TouchableOpacity 
+                  style={styles.notificationButton}
+                  accessibilityLabel="Notifications"
+                  accessibilityHint="Check your notifications"
+                >
+                  <Text style={styles.bellIcon}>🔔</Text>
+                </TouchableOpacity>
+              </View>
 
-            {/* Bottom Space for Navigation */}
-            <View style={styles.bottomSpace} />
-          </View>
-        </ScrollView>
+              {/* Search Form */}
+              <View style={styles.searchCard}>
+                {/* Location Input */}
+                <View style={styles.inputRow}>
+                  <Text style={styles.inputLabel}>Location</Text>
+                  <View style={styles.inputWrapper}>
+                    <Text style={styles.inputIcon}>📍</Text>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Enter your destination"
+                      placeholderTextColor="#A0AEC0"
+                      returnKeyType="next"
+                      accessibilityLabel="Location input"
+                      accessibilityHint="Enter your destination location"
+                      autoCorrect={false}
+                      clearButtonMode="while-editing"
+                    />
+                  </View>
+                </View>
+
+                {/* Date and Guest Row */}
+                <View style={styles.row}>
+                  {/* Date Input */}
+                  <View style={[styles.inputContainer, styles.halfWidth]}>
+                    <Text style={styles.inputLabel}>Date</Text>
+                    <TouchableOpacity 
+                      style={styles.inputWrapper}
+                      activeOpacity={0.7}
+                      accessibilityLabel="Date selector"
+                      accessibilityHint="Select your check-in date"
+                    >
+                      <Text style={styles.inputIcon}>📅</Text>
+                      <Text style={styles.inputText}>Select Date</Text>
+                    </TouchableOpacity>
+                  </View>
+
+                  {/* Guest Input */}
+                  <View style={[styles.inputContainer, styles.halfWidth]}>
+                    <Text style={styles.inputLabel}>Guest</Text>
+                    <TouchableOpacity 
+                      style={styles.inputWrapper}
+                      activeOpacity={0.7}
+                      accessibilityLabel="Guest selector"
+                      accessibilityHint="Select number of guests"
+                    >
+                      <Text style={styles.inputIcon}>👤</Text>
+                      <Text style={styles.inputText}>Add guest</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+
+                {/* Search Button */}
+                <TouchableOpacity 
+                  style={styles.searchButton}
+                  activeOpacity={0.7}
+                  accessibilityLabel="Search button"
+                  accessibilityHint="Search for hotels with the entered criteria"
+                  onPress={handleSearch}
+                >
+                  <Text style={styles.searchButtonText}>Search</Text>
+                </TouchableOpacity>
+              </View>
+
+              {/* Popular Hotels */}
+              <View style={styles.section}>
+                <View style={styles.sectionHeader}>
+                  <Text style={styles.sectionTitle}>Popular Hotel</Text>
+                  <TouchableOpacity 
+                    accessibilityLabel="See all hotels"
+                    accessibilityHint="View all popular hotels"
+                  >
+                    <Text style={styles.seeAll}>See all</Text>
+                  </TouchableOpacity>
+                </View>
+
+                <ScrollView 
+                  horizontal 
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.hotelListContent}
+                >
+                  {/* Hotel Card 1 */}
+                  <View style={styles.hotelCard}>
+                    <View style={styles.hotelImageContainer}>
+                      <Image
+                        source={{ uri: 'https://picsum.photos/300/200' }}
+                        style={styles.hotelImage}
+                        onLoadStart={() => setImageLoading(prev => ({ ...prev, 1: true }))}
+                        onLoadEnd={() => setImageLoading(prev => ({ ...prev, 1: false }))}
+                      />
+                      {imageLoading[1] && (
+                        <ActivityIndicator 
+                          style={styles.imageLoader} 
+                          color="#06B6D4" 
+                        />
+                      )}
+                    </View>
+                    <TouchableOpacity 
+                      style={styles.heartButton}
+                      activeOpacity={0.7}
+                      accessibilityLabel="Add to favorites"
+                    >
+                      <Text style={styles.heartIcon}>🤍</Text>
+                    </TouchableOpacity>
+                    <View style={styles.hotelInfo}>
+                      <Text 
+                        style={styles.hotelName}
+                        numberOfLines={1}
+                      >
+                        The Dreamland by Young Villas
+                      </Text>
+                      <View style={styles.hotelLocationRow}>
+                        <Text style={styles.locationIcon}>📍</Text>
+                        <Text 
+                          style={styles.locationText}
+                          numberOfLines={1}
+                        >
+                          Kuta, Denpasar, Bali
+                        </Text>
+                      </View>
+                      <View style={styles.hotelBottomRow}>
+                        <View style={styles.priceContainer}>
+                          <Text style={styles.priceAmount}>$34</Text>
+                          <Text style={styles.priceUnit}>/night</Text>
+                        </View>
+                        <View style={styles.ratingContainer}>
+                          <Text style={styles.ratingIcon}>⭐</Text>
+                          <Text style={styles.ratingText}>4.8</Text>
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+
+                  {/* Hotel Card 2 */}
+                  <View style={styles.hotelCard}>
+                    <View style={styles.hotelImageContainer}>
+                      <Image
+                        source={{ uri: 'https://picsum.photos/300/201' }}
+                        style={styles.hotelImage}
+                        onLoadStart={() => setImageLoading(prev => ({ ...prev, 2: true }))}
+                        onLoadEnd={() => setImageLoading(prev => ({ ...prev, 2: false }))}
+                      />
+                      {imageLoading[2] && (
+                        <ActivityIndicator 
+                          style={styles.imageLoader} 
+                          color="#06B6D4" 
+                        />
+                      )}
+                    </View>
+                    <TouchableOpacity 
+                      style={styles.heartButton}
+                      activeOpacity={0.7}
+                      accessibilityLabel="Add to favorites"
+                    >
+                      <Text style={styles.heartIcon}>🤍</Text>
+                    </TouchableOpacity>
+                    <View style={styles.hotelInfo}>
+                      <Text 
+                        style={styles.hotelName}
+                        numberOfLines={1}
+                      >
+                        Paradise Hotel
+                      </Text>
+                      <View style={styles.hotelLocationRow}>
+                        <Text style={styles.locationIcon}>📍</Text>
+                        <Text 
+                          style={styles.locationText}
+                          numberOfLines={1}
+                        >
+                          Kuta, Denpasar, Bali
+                        </Text>
+                      </View>
+                      <View style={styles.hotelBottomRow}>
+                        <View style={styles.priceContainer}>
+                          <Text style={styles.priceAmount}>$37</Text>
+                          <Text style={styles.priceUnit}>/night</Text>
+                        </View>
+                        <View style={styles.ratingContainer}>
+                          <Text style={styles.ratingIcon}>⭐</Text>
+                          <Text style={styles.ratingText}>4.8</Text>
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+                </ScrollView>
+              </View>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </UserLayout>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#F5F7FA',
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+  },
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
   },
-  
   scrollContainer: {
     flex: 1,
   },
-  
-  // Header with Blue Background (now scrollable)
   header: {
-    backgroundColor: '#4A90E2',
-    paddingBottom: 20,
+    padding: 24,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
   },
-  headerTop: {
+  greeting: {
+    fontSize: 16,
+    color: '#64748B',
+    marginBottom: 4,
+  },
+  welcomeText: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: '#1E293B',
+  },
+  notificationButton: {
+    padding: 8,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  bellIcon: {
+    fontSize: 20,
+  },
+  searchCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    margin: 24,
+    marginTop: 0,
+    padding: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 15,
+    elevation: 2,
+  },
+  inputRow: {
+    marginBottom: 16,
+  },
+  inputLabel: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#1E293B',
+    marginBottom: 8,
+  },
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F8FAFC',
+    borderRadius: 12,
+    padding: Platform.OS === 'ios' ? 16 : 12,
+    minHeight: 48,
+  },
+  input: {
+    flex: 1,
+    fontSize: 16,
+    color: '#1E293B',
+    paddingVertical: 0,
+  },
+  inputIcon: {
+    marginRight: 12,
+    fontSize: 18,
+    color: '#A0AEC0',
+  },
+  inputText: {
+    fontSize: 16,
+    color: '#A0AEC0',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+  },
+  halfWidth: {
+    width: '48%',
+  },
+  searchButton: {
+    backgroundColor: '#06B6D4',
+    borderRadius: 12,
+    padding: 16,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  searchButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  section: {
+    padding: 24,
+    paddingBottom: Platform.OS === 'ios' ? 40 : 24,
+  },
+  sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 16,
-  },
-  locationText: {
-    fontSize: 16,
-    color: '#FFFFFF',
-    fontWeight: '600',
-  },
-  headerIcons: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  headerIcon: {
-    width: 32,
-    height: 32,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  iconText: {
-    fontSize: 16,
-    color: '#FFFFFF',
-  },
-  
-  // Tabs
-  tabsContainer: {
-    flexDirection: 'row',
-    paddingHorizontal: 20,
-    marginBottom: 20,
-  },
-  tab: {
-    paddingHorizontal: 20,
-    paddingVertical: 8,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    borderRadius: 20,
-    marginRight: 12,
-  },
-  activeTab: {
-    backgroundColor: '#FFFFFF',
-  },
-  tabText: {
-    fontSize: 14,
-    color: '#FFFFFF',
-    fontWeight: '500',
-  },
-  activeTabText: {
-    color: '#4A90E2',
-  },
-  
-  // Search Card
-  searchCard: {
-    backgroundColor: '#FFFFFF',
-    marginHorizontal: 20,
-    borderRadius: 16,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
-  },
-  locationRow: {
     marginBottom: 16,
-  },
-  searchLabel: {
-    fontSize: 14,
-    color: '#6B7280',
-    marginBottom: 8,
-  },
-  locationSelector: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-    backgroundColor: '#F9FAFB',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-  },
-  locationIcon: {
-    fontSize: 18,
-    color: '#4A90E2',
-    marginRight: 8,
-  },
-  locationText: {
-    fontSize: 16,
-    color: '#6B7280',
-    flex: 1,
-  },
-  selectedLocationText: {
-    fontSize: 16,
-    color: '#1F2937',
-    fontWeight: '600',
-    flex: 1,
-  },
-  dateGuestRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  dateSection: {
-    flex: 1,
-    paddingVertical: 12,
-  },
-  dateText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1F2937',
-    marginBottom: 4,
-  },
-  nightsText: {
-    fontSize: 14,
-    color: '#6B7280',
-  },
-  divider: {
-    width: 1,
-    height: 40,
-    backgroundColor: '#E5E7EB',
-    marginHorizontal: 16,
-  },
-  guestSection: {
-    flex: 1,
-    paddingVertical: 12,
-  },
-  guestText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1F2937',
-    marginBottom: 4,
-  },
-  guestSubText: {
-    fontSize: 14,
-    color: '#6B7280',
-  },
-  searchButton: {
-    backgroundColor: '#4A90E2',
-    borderRadius: 12,
-    paddingVertical: 16,
-    alignItems: 'center',
-  },
-  searchButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#FFFFFF',
-  },
-  
-  // Content
-  content: {
-    backgroundColor: '#f8f9fa',
-    paddingTop: 20,
-  },
-  section: {
-    marginBottom: 32,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#1F2937',
-    paddingHorizontal: 20,
-    marginBottom: 16,
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#1E293B',
   },
-  
-  // Nearby Hotels - Updated for horizontal cards with images
-  nearbyList: {
-    paddingHorizontal: 20,
+  seeAll: {
+    color: '#06B6D4',
+    fontSize: 14,
+    fontWeight: '500',
   },
-  nearbyCard: {
-    width: 200,
+  hotelListContent: {
+    paddingRight: 24,
+  },
+  hotelCard: {
+    width: 220,
     marginRight: 16,
     backgroundColor: '#FFFFFF',
-    borderRadius: 12,
+    borderRadius: 16,
     overflow: 'hidden',
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
   },
-  nearbyImageContainer: {
-    height: 140,
+  hotelImageContainer: {
+    width: '100%',
+    height: 120,
+    backgroundColor: '#F8FAFC',
     position: 'relative',
   },
-  nearbyImageStyle: {
+  hotelImage: {
     width: '100%',
     height: '100%',
+    resizeMode: 'cover',
   },
-  favoriteButton: {
+  imageLoader: {
     position: 'absolute',
-    top: 8,
-    right: 8,
+    top: '50%',
+    left: '50%',
+    marginLeft: -12,
+    marginTop: -12,
+  },
+  heartButton: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
     width: 32,
     height: 32,
-    backgroundColor: 'rgba(255,255,255,0.9)',
-    borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 10,
-    elevation: 5,
-  },
-  favoriteIcon: {
-    fontSize: 16,
-  },
-  priceTag: {
-    position: 'absolute',
-    bottom: 8,
-    left: 8,
-    backgroundColor: '#4A90E2',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
-  },
-  priceTagText: {
-    fontSize: 12,
-    color: '#FFFFFF',
-    fontWeight: '600',
-  },
-  nearbyInfo: {
-    padding: 12,
-  },
-  nearbyName: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1F2937',
-    marginBottom: 4,
-  },
-  nearbyRating: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  ratingText: {
-    fontSize: 12,
-    color: '#F59E0B',
-  },
-  reviewsText: {
-    fontSize: 12,
-    color: '#6B7280',
-  },
-  
-  // Recommendations
-  recommendationCard: {
-    flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
-    marginHorizontal: 20,
-    marginBottom: 12,
-    borderRadius: 12,
-    padding: 16,
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
-  recommendationImageContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 12,
-    marginRight: 16,
-    position: 'relative',
-    overflow: 'hidden',
+  heartIcon: {
+    fontSize: 16,
   },
-  recommendationImageStyle: {
-    width: '100%',
-    height: '100%',
+  hotelInfo: {
+    padding: 12,
   },
-  favoriteButtonSmall: {
-    position: 'absolute',
-    top: 4,
-    right: 4,
-    width: 24,
-    height: 24,
-    backgroundColor: 'rgba(255,255,255,0.9)',
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 10,
-    elevation: 5,
-  },
-  favoriteIconSmall: {
-    fontSize: 12,
-  },
-  recommendationInfo: {
-    flex: 1,
-  },
-  recommendationName: {
+  hotelName: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1F2937',
+    color: '#1E293B',
     marginBottom: 4,
   },
-  recommendationRating: {
+  hotelLocationRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-    marginBottom: 4,
-  },
-  ratingStars: {
-    fontSize: 14,
-    color: '#F59E0B',
-  },
-  reviewCount: {
-    fontSize: 12,
-    color: '#6B7280',
-  },
-  recommendationLocation: {
-    fontSize: 14,
-    color: '#6B7280',
     marginBottom: 8,
+  },
+  locationIcon: {
+    marginRight: 4,
+    fontSize: 14,
+    color: '#A0AEC0',
+  },
+  locationText: {
+    fontSize: 14,
+    color: '#64748B',
+    flex: 1,
+  },
+  hotelBottomRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   priceContainer: {
     flexDirection: 'row',
-    alignItems: 'baseline',
+    alignItems: 'center',
   },
-  priceText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#4A90E2',
+  priceAmount: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#06B6D4',
   },
-  priceLabel: {
+  priceUnit: {
     fontSize: 14,
-    color: '#6B7280',
-    marginLeft: 4,
+    color: '#64748B',
+    marginLeft: 2,
   },
-  
-  // Bottom Space
-  bottomSpace: {
-    height: 100,
+  ratingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  ratingIcon: {
+    fontSize: 14,
+    color: '#FBBF24',
+    marginRight: 4,
+  },
+  ratingText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#1E293B',
   },
 });
 
