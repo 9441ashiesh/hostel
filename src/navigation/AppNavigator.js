@@ -26,20 +26,7 @@ import GuestSelectionScreen from '../screens/user/GuestSelectionScreen';
 import BookingScreen from '../screens/user/BookingScreen';
 import SignupScreen from '../screens/auth/SignupScreen' ;
 
-// Merchant Screens
-import MerchantDashboard from '../screens/merchant/MerchantDashboard';
-import MerchantProfile from '../screens/merchant/MerchantProfile';
-import MerchantAnalytics from '../screens/merchant/MerchantAnalytics';
-import PropertyInfo from '../screens/merchant/PropertyInfo';
-import PropertyLocationDetails from '../screens/merchant/PropertyLocationDetails';
-import PropertyAmenities from '../screens/merchant/PropertyAmenities';
-import Rooms from '../screens/merchant/Rooms';
-import PhotosVideos from '../screens/merchant/PhotosVideos';
 
-// Admin Screens
-import AdminDashboard from '../screens/admin/AdminDashboard';
-import UserManagement from '../screens/admin/UserManagement';
-import MerchantManagement from '../screens/admin/MerchantManagement';
 
 const Stack = createStackNavigator();
 
@@ -80,47 +67,16 @@ const UserStack = () => (
   </Stack.Navigator>
 );
 
-const MerchantStack = () => (
-  <Stack.Navigator
-    screenOptions={{
-      headerShown: false,
-    }}
-  >
-    <Stack.Screen name="MerchantDashboard" component={MerchantDashboard} />
-    <Stack.Screen name="MerchantProfile" component={MerchantProfile} />
-    <Stack.Screen name="MerchantAnalytics" component={MerchantAnalytics} />
-    <Stack.Screen name="PropertyInfo" component={PropertyInfo} />
-    <Stack.Screen name="PropertyLocationDetails" component={PropertyLocationDetails} />
-    <Stack.Screen name="PropertyAmenities" component={PropertyAmenities} />
-    <Stack.Screen name="Rooms" component={Rooms} />
-    <Stack.Screen name="PhotosVideos" component={PhotosVideos} />
-  </Stack.Navigator>
-);
 
-const AdminStack = () => (
-  <Stack.Navigator
-    screenOptions={{
-      headerShown: false,
-    }}
-  >
-    <Stack.Screen name="AdminDashboard" component={AdminDashboard} />
-    <Stack.Screen name="UserManagement" component={UserManagement} />
-    <Stack.Screen name="MerchantManagement" component={MerchantManagement} />
-  </Stack.Navigator>
-);
 
 const AppNavigator = () => {
-  const { isAuthenticated, userType } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {!isAuthenticated ? (
           <Stack.Screen name="Auth" component={AuthStack} />
-        ) : userType === 'admin' ? (
-          <Stack.Screen name="AdminApp" component={AdminStack} />
-        ) : userType === 'merchant' ? (
-          <Stack.Screen name="MerchantApp" component={MerchantStack} />
         ) : (
           <Stack.Screen name="UserApp" component={UserStack} />
         )}

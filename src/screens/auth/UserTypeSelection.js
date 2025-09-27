@@ -16,32 +16,25 @@ const UserTypeSelection = ({ navigation, route }) => {
   const { login } = useAuth();
   const { phoneNumber, verified } = route.params || {};
 
-  const handleUserTypeSelect = (type) => {
+  const handleUserTypeSelect = () => {
     if (phoneNumber && verified) {
       // Complete the login process
       const userData = {
         phone: phoneNumber,
-        type: type,
+        type: 'user',
         verified: true,
       };
 
-      login(userData, type);
+      login(userData, 'user');
       
-      // Navigate based on user type
-      if (type === 'merchant') {
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'MerchantApp' }],
-        });
-      } else {
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'UserApp' }],
-        });
-      }
+      // Navigate to user app
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'UserApp' }],
+      });
     } else {
       // If no phone verification, go to signup
-      navigation.navigate('PhoneSignup', { userType: type });
+      navigation.navigate('PhoneSignup', { userType: 'user' });
     }
   };
 
@@ -56,27 +49,14 @@ const UserTypeSelection = ({ navigation, route }) => {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.typeButton}
-            onPress={() => handleUserTypeSelect('user')}
+            onPress={() => handleUserTypeSelect()}
           >
             <LinearGradient
               colors={['#8b5cf6', '#a855f7']}
               style={styles.gradientButton}
             >
-              <Text style={styles.buttonText}>I'm looking for hostels</Text>
+              <Text style={styles.buttonText}>Get Started</Text>
               <Text style={styles.buttonSubtext}>Find and book hostels</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.typeButton}
-            onPress={() => handleUserTypeSelect('merchant')}
-          >
-            <LinearGradient
-              colors={['#6366f1', '#8b5cf6']}
-              style={styles.gradientButton}
-            >
-              <Text style={styles.buttonText}>I own a hostel</Text>
-              <Text style={styles.buttonSubtext}>List and manage your hostel</Text>
             </LinearGradient>
           </TouchableOpacity>
         </View>

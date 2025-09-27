@@ -12,24 +12,20 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [userType, setUserType] = useState(null); // 'user', 'merchant', or 'admin'
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const login = (userData, type) => {
+  const login = (userData) => {
     setUser(userData);
-    setUserType(type);
     setIsAuthenticated(true);
   };
 
   const logout = () => {
     setUser(null);
-    setUserType(null);
     setIsAuthenticated(false);
   };
 
   const value = {
     user,
-    userType,
     isAuthenticated,
     login,
     logout,
