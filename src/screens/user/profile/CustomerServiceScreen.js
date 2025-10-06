@@ -76,7 +76,7 @@ const CustomerServiceScreen = ({ navigation }) => {
 
           <TouchableOpacity style={styles.contactOption} onPress={handlePhoneCall}>
             <View style={styles.contactOptionLeft}>
-              <View style={[styles.iconContainer, { backgroundColor: '#3b82f6' }]}>
+              <View style={[styles.iconContainer, { backgroundColor: '#1f2937' }]}>
                 <Ionicons name="call" size={20} color="#ffffff" />
               </View>
               <View style={styles.contactInfo}>
@@ -164,9 +164,9 @@ const CustomerServiceScreen = ({ navigation }) => {
             style={styles.faqLink}
             onPress={() => navigation.navigate('FAQScreen')}
           >
-            <Ionicons name="help-circle" size={20} color="#3b82f6" />
+            <Ionicons name="help-circle" size={20} color="#1f2937" />
             <Text style={styles.faqLinkText}>Check our FAQ for quick answers</Text>
-            <Ionicons name="chevron-forward" size={16} color="#3b82f6" />
+            <Ionicons name="chevron-forward" size={16} color="#1f2937" />
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#1f2937',
     borderRadius: 12,
     paddingVertical: 16,
     marginTop: 8,

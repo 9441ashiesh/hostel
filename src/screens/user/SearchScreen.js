@@ -13,10 +13,12 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import UserLayout from '../../components/layout/UserLayout';
 import { Ionicons } from '@expo/vector-icons';
+import { useFavorites } from '../../context/FavoritesContext';
 
 const SearchScreen = ({ navigation, route }) => {
   const [selectedLocation, setSelectedLocation] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
+  const { toggleFavorite, isFavorite } = useFavorites();
 
   // Get values returned from other screens
   useEffect(() => {
@@ -48,6 +50,10 @@ const SearchScreen = ({ navigation, route }) => {
       location: selectedLocation,
       date: selectedDate,
     });
+  };
+
+  const handleToggleFavorite = (hotel) => {
+    toggleFavorite(hotel);
   };
   const popularHotels = [
     {
@@ -143,10 +149,21 @@ const SearchScreen = ({ navigation, route }) => {
               contentContainerStyle={styles.hotelsContent}
             >
               {popularHotels.map((hotel) => (
-                <TouchableOpacity key={hotel.id} style={styles.hotelCard}>
+                <TouchableOpacity 
+                  key={hotel.id} 
+                  style={styles.hotelCard}
+                  onPress={() => navigation.navigate('HostelDetailScreen', { hostel: hotel })}
+                >
                   <Image source={{ uri: hotel.image }} style={styles.hotelImage} />
-                  <TouchableOpacity style={styles.heartButton}>
-                    <Ionicons name="heart-outline" size={20} color="#6B7280" />
+                  <TouchableOpacity 
+                    style={styles.heartButton}
+                    onPress={() => handleToggleFavorite(hotel)}
+                  >
+                    <Ionicons 
+                      name={isFavorite(hotel.id) ? "heart" : "heart-outline"} 
+                      size={20} 
+                      color={isFavorite(hotel.id) ? "#ef4444" : "#6b7280"} 
+                    />
                   </TouchableOpacity>
                   <View style={styles.hotelInfo}>
                     <Text style={styles.hotelName} numberOfLines={1}>{hotel.name}</Text>
@@ -159,7 +176,7 @@ const SearchScreen = ({ navigation, route }) => {
                         ${hotel.price}<Text style={styles.priceUnit}>/night</Text>
                       </Text>
                       <View style={styles.ratingContainer}>
-                        <Ionicons name="star" size={14} color="#FFB800" />
+                        <Ionicons name="star" size={14} color="#fbbf24" />
                         <Text style={styles.ratingText}>{hotel.rating}</Text>
                       </View>
                     </View>
@@ -270,14 +287,14 @@ const styles = StyleSheet.create({
     color: '#B0B0B0',
   },
   searchButton: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#1f2937',
     borderRadius: 24,
     paddingVertical: 16,
     alignItems: 'center',
     marginTop: 8,
-    shadowColor: '#3b82f6',
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 4,
   },
@@ -304,7 +321,7 @@ const styles = StyleSheet.create({
   },
   seeAll: {
     fontSize: 14,
-    color: '#3b82f6',
+    color: '#1f2937',
     fontWeight: '600',
   },
   hotelsContent: {
@@ -372,7 +389,7 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#3b82f6',
+    color: '#1f2937',
   },
   priceUnit: {
     fontSize: 12,

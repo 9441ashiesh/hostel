@@ -12,8 +12,8 @@ import OTPVerification from '../screens/auth/OTPVerification';
 
 // User Screens
 import UserDashboard from '../screens/user/UserDashboard';
-import ProfileScreen from '../screens/user/ProfileScreen';
-import EditProfileScreen from '../screens/user/EditProfileScreen';
+import ProfileScreen from '../screens/user/profile/ProfileScreen';
+import EditProfileScreen from '../screens/user/profile/EditProfileScreen';
 import MyBookingsScreen from '../screens/user/MyBookingsScreen';
 import PaymentMethodsScreen from '../screens/user/PaymentMethodsScreen';
 import PrivacyPolicyScreen from '../screens/user/PrivacyPolicyScreen';
@@ -29,14 +29,14 @@ import BookingScreen from '../screens/user/BookingScreen';
 import SignupScreen from '../screens/auth/SignupScreen';
 
 // New Profile Screens
-import PasswordSecurityScreen from '../screens/user/PasswordSecurityScreen';
-import PrivacyProfileScreen from '../screens/user/PrivacyProfileScreen';
-import CountrySelectionScreen from '../screens/user/CountrySelectionScreen';
-import CurrencySelectionScreen from '../screens/user/CurrencySelectionScreen';
-import LanguageSelectionScreen from '../screens/user/LanguageSelectionScreen';
-import NotificationSettingsScreen from '../screens/user/NotificationSettingsScreen';
-import FAQScreen from '../screens/user/FAQScreen';
-import CustomerServiceScreen from '../screens/user/CustomerServiceScreen';
+import PasswordSecurityScreen from '../screens/user/profile/PasswordSecurityScreen';
+import PrivacyProfileScreen from '../screens/user/profile/PrivacyProfileScreen';
+import CountrySelectionScreen from '../screens/user/profile/CountrySelectionScreen';
+import CurrencySelectionScreen from '../screens/user/profile/CurrencySelectionScreen';
+import LanguageSelectionScreen from '../screens/user/profile/LanguageSelectionScreen';
+import NotificationSettingsScreen from '../screens/user/profile/NotificationSettingsScreen';
+import FAQScreen from '../screens/user/profile/FAQScreen';
+import CustomerServiceScreen from '../screens/user/profile/CustomerServiceScreen';
 
 
 

@@ -45,7 +45,7 @@ const PrivacyProfileScreen = ({ navigation }) => {
             <Switch
               value={profileVisibility}
               onValueChange={setProfileVisibility}
-              trackColor={{ false: '#e5e7eb', true: '#3b82f6' }}
+              trackColor={{ false: '#e5e7eb', true: '#1f2937' }}
               thumbColor={profileVisibility ? '#ffffff' : '#9ca3af'}
             />
           </View>
@@ -61,7 +61,7 @@ const PrivacyProfileScreen = ({ navigation }) => {
             <Switch
               value={showEmail}
               onValueChange={setShowEmail}
-              trackColor={{ false: '#e5e7eb', true: '#3b82f6' }}
+              trackColor={{ false: '#e5e7eb', true: '#1f2937' }}
               thumbColor={showEmail ? '#ffffff' : '#9ca3af'}
             />
           </View>
@@ -77,7 +77,7 @@ const PrivacyProfileScreen = ({ navigation }) => {
             <Switch
               value={showPhone}
               onValueChange={setShowPhone}
-              trackColor={{ false: '#e5e7eb', true: '#3b82f6' }}
+              trackColor={{ false: '#e5e7eb', true: '#1f2937' }}
               thumbColor={showPhone ? '#ffffff' : '#9ca3af'}
             />
           </View>
@@ -98,7 +98,7 @@ const PrivacyProfileScreen = ({ navigation }) => {
             <Switch
               value={allowMessages}
               onValueChange={setAllowMessages}
-              trackColor={{ false: '#e5e7eb', true: '#3b82f6' }}
+              trackColor={{ false: '#e5e7eb', true: '#1f2937' }}
               thumbColor={allowMessages ? '#ffffff' : '#9ca3af'}
             />
           </View>
@@ -119,7 +119,7 @@ const PrivacyProfileScreen = ({ navigation }) => {
             <Switch
               value={dataSharing}
               onValueChange={setDataSharing}
-              trackColor={{ false: '#e5e7eb', true: '#3b82f6' }}
+              trackColor={{ false: '#e5e7eb', true: '#1f2937' }}
               thumbColor={dataSharing ? '#ffffff' : '#9ca3af'}
             />
           </View>
@@ -135,7 +135,7 @@ const PrivacyProfileScreen = ({ navigation }) => {
             <Switch
               value={analytics}
               onValueChange={setAnalytics}
-              trackColor={{ false: '#e5e7eb', true: '#3b82f6' }}
+              trackColor={{ false: '#e5e7eb', true: '#1f2937' }}
               thumbColor={analytics ? '#ffffff' : '#9ca3af'}
             />
           </View>

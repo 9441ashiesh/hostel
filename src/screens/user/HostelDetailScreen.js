@@ -123,7 +123,7 @@ const HostelDetailScreen = ({ navigation, route }) => {
               <View style={styles.mapOverlay}>
                 <View style={styles.mapGrid}>
                   <View style={[styles.mapBlock, { backgroundColor: '#22c55e' }]} />
-                  <View style={[styles.mapBlock, { backgroundColor: '#3b82f6' }]} />
+                  <View style={[styles.mapBlock, { backgroundColor: '#1f2937' }]} />
                   <View style={[styles.mapBlock, { backgroundColor: '#f59e0b' }]} />
                   <View style={[styles.mapBlock, { backgroundColor: '#ef4444' }]} />
                   <View style={[styles.mapBlock, { backgroundColor: '#8b5cf6' }]} />

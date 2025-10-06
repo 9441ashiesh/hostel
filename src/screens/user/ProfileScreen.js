@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
   },
   editButtonText: {
     fontSize: 16,
-    color: '#3b82f6',
+    color: '#1f2937',
     fontWeight: '500',
   },
   section: {

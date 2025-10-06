@@ -63,7 +63,7 @@ const CountrySelectionScreen = ({ navigation }) => {
         <Text style={styles.countryName}>{item.name}</Text>
       </View>
       {selectedCountry === item.name && (
-        <Ionicons name="checkmark" size={20} color="#3b82f6" />
+        <Ionicons name="checkmark" size={20} color="#1f2937" />
       )}
     </TouchableOpacity>
   );

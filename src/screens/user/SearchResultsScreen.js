@@ -85,7 +85,7 @@ const SearchResultsScreen = ({ navigation, route }) => {
           <Ionicons 
             name={isFavorite(item.id) ? "heart" : "heart-outline"} 
             size={20} 
-            color={isFavorite(item.id) ? "#e91e63" : "#ffffff"} 
+            color={isFavorite(item.id) ? "#ef4444" : "#ffffff"} 
           />
         </TouchableOpacity>
       </View>
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
   },
   checkedBox: {
     backgroundColor: '#f0f9ff',
-    borderColor: '#3b82f6',
+    borderColor: '#1f2937',
   },
 });
 

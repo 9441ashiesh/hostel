@@ -319,7 +319,7 @@ const styles = StyleSheet.create({
     height: 50,
   },
   checkInDay: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#1f2937',
     borderRadius: 20,
     width: 40,
     height: 40,
@@ -327,7 +327,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   checkOutDay: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#1f2937',
     borderRadius: 20,
     width: 40,
     height: 40,
@@ -354,7 +354,7 @@ const styles = StyleSheet.create({
   },
   dateLabel: {
     fontSize: 8,
-    color: '#3b82f6',
+    color: '#1f2937',
     fontWeight: '600',
     marginTop: 2,
   },
@@ -379,7 +379,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   applyButton: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#1f2937',
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',

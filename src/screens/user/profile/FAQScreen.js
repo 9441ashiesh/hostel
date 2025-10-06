@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
   contactButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#1f2937',
     borderRadius: 12,
     paddingHorizontal: 24,
     paddingVertical: 12,

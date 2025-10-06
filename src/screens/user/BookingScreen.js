@@ -438,7 +438,7 @@ const styles = StyleSheet.create({
   },
   couponText: {
     fontSize: 14,
-    color: '#3b82f6',
+    color: '#1f2937',
     fontWeight: '500',
   },
   bottomSpace: {
@@ -452,7 +452,7 @@ const styles = StyleSheet.create({
     borderTopColor: '#e5e7eb',
   },
   confirmButton: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#1f2937',
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',

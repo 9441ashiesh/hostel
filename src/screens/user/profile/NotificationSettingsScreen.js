@@ -45,7 +45,7 @@ const NotificationSettingsScreen = ({ navigation }) => {
             <Switch
               value={pushNotifications}
               onValueChange={setPushNotifications}
-              trackColor={{ false: '#e5e7eb', true: '#3b82f6' }}
+              trackColor={{ false: '#e5e7eb', true: '#1f2937' }}
               thumbColor={pushNotifications ? '#ffffff' : '#9ca3af'}
             />
           </View>
@@ -66,7 +66,7 @@ const NotificationSettingsScreen = ({ navigation }) => {
             <Switch
               value={emailNotifications}
               onValueChange={setEmailNotifications}
-              trackColor={{ false: '#e5e7eb', true: '#3b82f6' }}
+              trackColor={{ false: '#e5e7eb', true: '#1f2937' }}
               thumbColor={emailNotifications ? '#ffffff' : '#9ca3af'}
             />
           </View>
@@ -87,7 +87,7 @@ const NotificationSettingsScreen = ({ navigation }) => {
             <Switch
               value={bookingUpdates}
               onValueChange={setBookingUpdates}
-              trackColor={{ false: '#e5e7eb', true: '#3b82f6' }}
+              trackColor={{ false: '#e5e7eb', true: '#1f2937' }}
               thumbColor={bookingUpdates ? '#ffffff' : '#9ca3af'}
             />
           </View>
@@ -103,7 +103,7 @@ const NotificationSettingsScreen = ({ navigation }) => {
             <Switch
               value={newMessages}
               onValueChange={setNewMessages}
-              trackColor={{ false: '#e5e7eb', true: '#3b82f6' }}
+              trackColor={{ false: '#e5e7eb', true: '#1f2937' }}
               thumbColor={newMessages ? '#ffffff' : '#9ca3af'}
             />
           </View>
@@ -119,7 +119,7 @@ const NotificationSettingsScreen = ({ navigation }) => {
             <Switch
               value={priceAlerts}
               onValueChange={setPriceAlerts}
-              trackColor={{ false: '#e5e7eb', true: '#3b82f6' }}
+              trackColor={{ false: '#e5e7eb', true: '#1f2937' }}
               thumbColor={priceAlerts ? '#ffffff' : '#9ca3af'}
             />
           </View>
@@ -135,7 +135,7 @@ const NotificationSettingsScreen = ({ navigation }) => {
             <Switch
               value={promotions}
               onValueChange={setPromotions}
-              trackColor={{ false: '#e5e7eb', true: '#3b82f6' }}
+              trackColor={{ false: '#e5e7eb', true: '#1f2937' }}
               thumbColor={promotions ? '#ffffff' : '#9ca3af'}
             />
           </View>

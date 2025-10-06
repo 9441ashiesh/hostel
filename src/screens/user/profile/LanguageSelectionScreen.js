@@ -11,61 +11,60 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 
-const CurrencySelectionScreen = ({ navigation }) => {
+const LanguageSelectionScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCurrency, setSelectedCurrency] = useState('USD');
+  const [selectedLanguage, setSelectedLanguage] = useState('English');
 
-  const currencies = [
-    { code: 'USD', name: 'US Dollar', symbol: '$', popular: true },
-    { code: 'EUR', name: 'Euro', symbol: '€', popular: true },
-    { code: 'GBP', name: 'British Pound', symbol: '£', popular: true },
-    { code: 'JPY', name: 'Japanese Yen', symbol: '¥', popular: true },
-    { code: 'INR', name: 'Indian Rupee', symbol: '₹', popular: true },
-    { code: 'AUD', name: 'Australian Dollar', symbol: 'A$', popular: true },
-    { code: 'CAD', name: 'Canadian Dollar', symbol: 'C$', popular: true },
-    { code: 'CHF', name: 'Swiss Franc', symbol: 'CHF', popular: true },
-    { code: 'CNY', name: 'Chinese Yuan', symbol: '¥', popular: false },
-    { code: 'SGD', name: 'Singapore Dollar', symbol: 'S$', popular: false },
-    { code: 'NZD', name: 'New Zealand Dollar', symbol: 'NZ$', popular: false },
-    { code: 'THB', name: 'Thai Baht', symbol: '฿', popular: false },
-    { code: 'KRW', name: 'South Korean Won', symbol: '₩', popular: false },
-    { code: 'MXN', name: 'Mexican Peso', symbol: '$', popular: false },
-    { code: 'BRL', name: 'Brazilian Real', symbol: 'R$', popular: false },
-    { code: 'ZAR', name: 'South African Rand', symbol: 'R', popular: false },
-    { code: 'HKD', name: 'Hong Kong Dollar', symbol: 'HK$', popular: false },
-    { code: 'NOK', name: 'Norwegian Krone', symbol: 'kr', popular: false },
-    { code: 'SEK', name: 'Swedish Krona', symbol: 'kr', popular: false },
-    { code: 'DKK', name: 'Danish Krone', symbol: 'kr', popular: false },
+  const languages = [
+    { name: 'English', code: 'en', popular: true },
+    { name: 'Español', code: 'es', popular: true },
+    { name: 'Français', code: 'fr', popular: true },
+    { name: 'Deutsch', code: 'de', popular: true },
+    { name: '中文', code: 'zh', popular: true },
+    { name: '日本語', code: 'ja', popular: true },
+    { name: 'Italiano', code: 'it', popular: true },
+    { name: 'हिन्दी', code: 'hi', popular: true },
+    { name: 'العربية', code: 'ar', popular: false },
+    { name: 'Português', code: 'pt', popular: false },
+    { name: 'Русский', code: 'ru', popular: false },
+    { name: '한국어', code: 'ko', popular: false },
+    { name: 'Nederlands', code: 'nl', popular: false },
+    { name: 'Svenska', code: 'sv', popular: false },
+    { name: 'Polski', code: 'pl', popular: false },
+    { name: 'Türkçe', code: 'tr', popular: false },
+    { name: 'ไทย', code: 'th', popular: false },
+    { name: 'Tiếng Việt', code: 'vi', popular: false },
+    { name: 'Bahasa Indonesia', code: 'id', popular: false },
+    { name: 'Українська', code: 'uk', popular: false },
   ];
 
-  const popularCurrencies = currencies.filter(currency => currency.popular);
-  const allCurrencies = currencies.filter(currency => 
-    currency.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    currency.code.toLowerCase().includes(searchQuery.toLowerCase())
+  const popularLanguages = languages.filter(language => language.popular);
+  const allLanguages = languages.filter(language => 
+    language.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleSelectCurrency = (currencyCode) => {
-    setSelectedCurrency(currencyCode);
-    // Here you would typically save the selection
+  const handleSelectLanguage = (languageName) => {
+    setSelectedLanguage(languageName);
+    // Here you would typically save the selection and possibly trigger app language change
     navigation.goBack();
   };
 
-  const renderCurrencyItem = ({ item }) => (
+  const renderLanguageItem = ({ item }) => (
     <TouchableOpacity
-      style={styles.currencyItem}
-      onPress={() => handleSelectCurrency(item.code)}
+      style={styles.languageItem}
+      onPress={() => handleSelectLanguage(item.name)}
     >
-      <View style={styles.currencyInfo}>
-        <View style={styles.currencySymbol}>
-          <Text style={styles.symbolText}>{item.symbol}</Text>
+      <View style={styles.languageInfo}>
+        <View style={styles.languageIcon}>
+          <Ionicons name="language" size={20} color="#6b7280" />
         </View>
-        <View style={styles.currencyDetails}>
-          <Text style={styles.currencyCode}>{item.code}</Text>
-          <Text style={styles.currencyName}>{item.name}</Text>
+        <View style={styles.languageDetails}>
+          <Text style={styles.languageName}>{item.name}</Text>
+          <Text style={styles.languageCode}>{item.code.toUpperCase()}</Text>
         </View>
       </View>
-      {selectedCurrency === item.code && (
-        <Ionicons name="checkmark" size={20} color="#3b82f6" />
+      {selectedLanguage === item.name && (
+        <Ionicons name="checkmark" size={20} color="#1f2937" />
       )}
     </TouchableOpacity>
   );
@@ -77,7 +76,7 @@ const CurrencySelectionScreen = ({ navigation }) => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="#1f2937" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Select Currency</Text>
+        <Text style={styles.headerTitle}>Select Language</Text>
         <View style={styles.headerRight} />
       </View>
 
@@ -88,7 +87,7 @@ const CurrencySelectionScreen = ({ navigation }) => {
             <Ionicons name="search" size={20} color="#9ca3af" />
             <TextInput
               style={styles.searchInput}
-              placeholder="Search currencies"
+              placeholder="Search languages"
               value={searchQuery}
               onChangeText={setSearchQuery}
               placeholderTextColor="#9ca3af"
@@ -101,44 +100,47 @@ const CurrencySelectionScreen = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Popular Currencies */}
+        {/* Popular Languages */}
         {searchQuery === '' && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Popular Currencies</Text>
+            <Text style={styles.sectionTitle}>Popular Languages</Text>
             <FlatList
-              data={popularCurrencies}
+              data={popularLanguages}
               keyExtractor={(item) => item.code}
-              renderItem={renderCurrencyItem}
+              renderItem={renderLanguageItem}
               scrollEnabled={false}
             />
           </View>
         )}
 
-        {/* All Currencies */}
+        {/* All Languages */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>
-            {searchQuery === '' ? 'All Currencies' : 'Search Results'}
+            {searchQuery === '' ? 'All Languages' : 'Search Results'}
           </Text>
           <FlatList
-            data={searchQuery === '' ? currencies : allCurrencies}
+            data={searchQuery === '' ? languages : allLanguages}
             keyExtractor={(item) => item.code}
-            renderItem={renderCurrencyItem}
+            renderItem={renderLanguageItem}
             scrollEnabled={false}
           />
+        </View>
+
+        {/* Language Note */}
+        <View style={styles.noteContainer}>
+          <View style={styles.noteIcon}>
+            <Ionicons name="information-circle" size={20} color="#1f2937" />
+          </View>
+          <Text style={styles.noteText}>
+            Changing your language will update the app interface. Some content may still appear in the original language.
+          </Text>
         </View>
       </ScrollView>
 
       {/* Current Selection */}
       <View style={styles.currentSelection}>
         <Text style={styles.currentSelectionLabel}>Current Selection:</Text>
-        <View style={styles.currentSelectionInfo}>
-          <Text style={styles.currentSelectionSymbol}>
-            {currencies.find(c => c.code === selectedCurrency)?.symbol}
-          </Text>
-          <Text style={styles.currentSelectionValue}>
-            {selectedCurrency} - {currencies.find(c => c.code === selectedCurrency)?.name}
-          </Text>
-        </View>
+        <Text style={styles.currentSelectionValue}>{selectedLanguage}</Text>
       </View>
     </SafeAreaView>
   );
@@ -198,7 +200,7 @@ const styles = StyleSheet.create({
     color: '#1f2937',
     marginBottom: 16,
   },
-  currencyItem: {
+  languageItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -206,12 +208,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#f3f4f6',
   },
-  currencyInfo: {
+  languageInfo: {
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
   },
-  currencySymbol: {
+  languageIcon: {
     width: 40,
     height: 40,
     borderRadius: 20,
@@ -220,23 +222,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 16,
   },
-  symbolText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1f2937',
-  },
-  currencyDetails: {
+  languageDetails: {
     flex: 1,
   },
-  currencyCode: {
+  languageName: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '500',
     color: '#1f2937',
     marginBottom: 2,
   },
-  currencyName: {
+  languageCode: {
     fontSize: 14,
     color: '#6b7280',
+  },
+  noteContainer: {
+    flexDirection: 'row',
+    backgroundColor: '#eff6ff',
+    borderRadius: 12,
+    padding: 16,
+    marginHorizontal: 20,
+    marginBottom: 24,
+  },
+  noteIcon: {
+    marginRight: 12,
+    marginTop: 1,
+  },
+  noteText: {
+    flex: 1,
+    fontSize: 14,
+    color: '#1e40af',
+    lineHeight: 20,
   },
   currentSelection: {
     paddingHorizontal: 20,
@@ -248,19 +263,7 @@ const styles = StyleSheet.create({
   currentSelectionLabel: {
     fontSize: 14,
     color: '#6b7280',
-    marginBottom: 8,
-  },
-  currentSelectionInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  currentSelectionSymbol: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#1f2937',
-    marginRight: 12,
-    width: 24,
-    textAlign: 'center',
+    marginBottom: 4,
   },
   currentSelectionValue: {
     fontSize: 16,
@@ -269,4 +272,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CurrencySelectionScreen;
+export default LanguageSelectionScreen;

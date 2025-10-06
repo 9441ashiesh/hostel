@@ -9,8 +9,8 @@ import {
   TextInput,
   Alert,
 } from 'react-native';
-import { useAuth } from '../../context/AuthContext';
-import UserLayout from '../../components/layout/UserLayout';
+import { useAuth } from '../../../context/AuthContext';
+import UserLayout from '../../../components/layout/UserLayout';
 
 const EditProfileScreen = ({ navigation }) => {
   const { user } = useAuth();

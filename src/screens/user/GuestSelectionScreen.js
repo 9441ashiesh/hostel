@@ -77,7 +77,7 @@ const GuestSelectionScreen = ({ navigation, route }) => {
                 {option.label}
               </Text>
               {selectedGuests === option.value && (
-                <Ionicons name="checkmark" size={20} color="#3b82f6" />
+                <Ionicons name="checkmark" size={20} color="#1f2937" />
               )}
             </TouchableOpacity>
           ))}
@@ -89,7 +89,7 @@ const GuestSelectionScreen = ({ navigation, route }) => {
             Contact us for group bookings and special arrangements
           </Text>
           <TouchableOpacity style={styles.contactButton}>
-            <Ionicons name="call" size={16} color="#3b82f6" />
+            <Ionicons name="call" size={16} color="#1f2937" />
             <Text style={styles.contactButtonText}>Contact Support</Text>
           </TouchableOpacity>
         </View>
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     borderColor: '#e5e7eb',
   },
   selectedGuestOption: {
-    borderColor: '#3b82f6',
+    borderColor: '#1f2937',
     backgroundColor: '#f0f9ff',
   },
   guestOptionText: {
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   selectedGuestOptionText: {
-    color: '#3b82f6',
+    color: '#1f2937',
     fontWeight: '600',
   },
   customGuestSection: {
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
   },
   contactButtonText: {
     fontSize: 14,
-    color: '#3b82f6',
+    color: '#1f2937',
     fontWeight: '600',
   },
   footer: {
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     borderTopColor: '#e5e7eb',
   },
   applyButton: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#1f2937',
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: 'center',

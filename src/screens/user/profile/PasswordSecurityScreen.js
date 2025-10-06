@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     color: '#1f2937',
   },
   changePasswordButton: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#1f2937',
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
