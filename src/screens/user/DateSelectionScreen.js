@@ -7,33 +7,67 @@ import {
   SafeAreaView,
   ScrollView,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
-const DateSelectionScreen = ({ navigation }) => {
-  const [checkInDate, setCheckInDate] = useState(11);
-  const [checkOutDate, setCheckOutDate] = useState(12);
-  const [currentMonth, setCurrentMonth] = useState('September 2025');
+const DateSelectionScreen = ({ navigation, route }) => {
+  const [checkInDate, setCheckInDate] = useState(null);
+  const [checkOutDate, setCheckOutDate] = useState(null);
+  const [currentMonth] = useState(new Date());
+  const currentLocation = route.params?.currentLocation || '';
+  const currentDateValue = route.params?.currentDate || '';
   
-  // Current month calendar data
-  const septemberDays = [
-    null, 1, 2, 3, 4, 5, 6,
-    7, 8, 9, 10, 11, 12, 13,
-    14, 15, 16, 17, 18, 19, 20,
-    21, 22, 23, 24, 25, 26, 27,
-    28, 29, 30
-  ];
+  // Generate calendar data dynamically
+  const generateMonthDays = (date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDayOfWeek = firstDay.getDay();
+    
+    const days = [];
+    
+    // Add empty cells for days before the first day of month
+    for (let i = 0; i < startingDayOfWeek; i++) {
+      days.push(null);
+    }
+    
+    // Add all days of the month
+    for (let i = 1; i <= daysInMonth; i++) {
+      days.push(i);
+    }
+    
+    return days;
+  };
 
-  // Next month calendar data
-  const octoberDays = [
-    null, null, null, null, 1, 2, 3,
-    4, 5, 6, 7, 8, 9, 10,
-    11, 12, 13, 14, 15, 16, 17,
-    18, 19, 20, 21, 22, 23, 24,
-    25, 26, 27, 28, 29, 30, 31
-  ];
+  const septemberDays = generateMonthDays(currentMonth);
+  const nextMonth = new Date(currentMonth);
+  nextMonth.setMonth(currentMonth.getMonth() + 1);
+  const octoberDays = generateMonthDays(nextMonth);
 
-  const weekDays = ['S', 'T', 'W', 'T', 'F', 'S', 'M'];
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                      'July', 'August', 'September', 'October', 'November', 'December'];
+  
+  const formatDisplayDate = (day, month) => {
+    if (!day) return 'Select';
+    const monthShort = monthNames[month].substring(0, 3);
+    return `${day} ${monthShort}`;
+  };
+
+  const weekDays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
   const handleDateSelect = (day) => {
+    if (!day) return;
+    
+    // Get today's date for comparison
+    const today = new Date();
+    const selectedDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+    
+    // Don't allow selection of past dates
+    if (selectedDate < today.setHours(0, 0, 0, 0)) {
+      return; // Disable past dates
+    }
+    
     if (!checkInDate || (checkInDate && checkOutDate)) {
       // Set check-in date
       setCheckInDate(day);
@@ -48,10 +82,26 @@ const DateSelectionScreen = ({ navigation }) => {
     }
   };
 
+  const handleApply = () => {
+    if (checkInDate && checkOutDate) {
+      const formattedDate = formatDisplayDate(checkInDate, currentMonth.getMonth()) + 
+                           ' - ' + formatDisplayDate(checkOutDate, currentMonth.getMonth());
+      navigation.navigate('SearchScreen', { 
+        selectedDate: formattedDate,
+        selectedLocation: currentLocation
+      });
+    }
+  };
+
   const renderCalendarDay = (day, month = 'current') => {
     if (!day) {
       return <View key={`empty-${Math.random()}`} style={styles.emptyDay} />;
     }
+
+    // Check if date is in the past
+    const today = new Date();
+    const dateToCheck = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+    const isPastDate = dateToCheck < today.setHours(0, 0, 0, 0);
 
     const isCheckIn = day === checkInDate && month === 'current';
     const isCheckOut = day === checkOutDate && month === 'current';
@@ -62,18 +112,26 @@ const DateSelectionScreen = ({ navigation }) => {
         key={`${month}-${day}`}
         style={[
           styles.dayButton,
-          isCheckIn && styles.checkInDay,
-          isCheckOut && styles.checkOutDay,
           isInRange && styles.rangeDay,
+          isPastDate && styles.disabledDay,
         ]}
         onPress={() => handleDateSelect(day)}
+        disabled={isPastDate}
       >
-        <Text style={[
-          styles.dayText,
-          (isCheckIn || isCheckOut) && styles.selectedDayText,
+        <View style={[
+          isCheckIn && styles.checkInDay,
+          isCheckOut && styles.checkOutDay,
         ]}>
-          {day}
-        </Text>
+          <Text style={[
+            styles.dayText,
+            (isCheckIn || isCheckOut) && styles.selectedDayText,
+            isPastDate && styles.disabledDayText,
+          ]}>
+            {day}
+          </Text>
+        </View>
+        {isCheckIn && <Text style={styles.dateLabel}>Check-in</Text>}
+        {isCheckOut && <Text style={styles.dateLabel}>Check-out</Text>}
       </TouchableOpacity>
     );
   };
@@ -86,7 +144,7 @@ const DateSelectionScreen = ({ navigation }) => {
           style={styles.backButton} 
           onPress={() => navigation.goBack()}
         >
-          <Text style={styles.backIcon}>←</Text>
+          <Ionicons name="arrow-back" size={24} color="#1F2937" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Select Check in</Text>
       </View>
@@ -96,11 +154,15 @@ const DateSelectionScreen = ({ navigation }) => {
         <View style={styles.dateDisplayContainer}>
           <View style={styles.dateColumn}>
             <Text style={styles.dateLabel}>Check in</Text>
-            <Text style={styles.dateValue}>11 Sep</Text>
+            <Text style={styles.dateValue}>
+              {formatDisplayDate(checkInDate, currentMonth.getMonth())}
+            </Text>
           </View>
           <View style={styles.dateColumn}>
             <Text style={styles.dateLabel}>Check out</Text>
-            <Text style={styles.dateValue}>12 Sep</Text>
+            <Text style={styles.dateValue}>
+              {formatDisplayDate(checkOutDate, currentMonth.getMonth())}
+            </Text>
           </View>
         </View>
 
@@ -111,14 +173,18 @@ const DateSelectionScreen = ({ navigation }) => {
           ))}
         </View>
 
-        {/* September 2025 Calendar */}
-        <Text style={styles.monthTitle}>{currentMonth}</Text>
+        {/* September/Current Month Calendar */}
+        <Text style={styles.monthTitle}>
+          {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
+        </Text>
         <View style={styles.calendar}>
           {septemberDays.map((day, index) => renderCalendarDay(day, 'current'))}
         </View>
 
-        {/* October 2025 Calendar */}
-        <Text style={styles.monthTitle}>October 2025</Text>
+        {/* October/Next Month Calendar */}
+        <Text style={styles.monthTitle}>
+          {monthNames[nextMonth.getMonth()]} {nextMonth.getFullYear()}
+        </Text>
         <View style={styles.calendar}>
           {octoberDays.map((day, index) => renderCalendarDay(day, 'next'))}
         </View>
@@ -126,6 +192,20 @@ const DateSelectionScreen = ({ navigation }) => {
         {/* Bottom Space */}
         <View style={styles.bottomSpace} />
       </ScrollView>
+
+      {/* Apply Button - Fixed at Bottom */}
+      <View style={styles.applyButtonContainer}>
+        <TouchableOpacity 
+          style={[
+            styles.applyButton,
+            (!checkInDate || !checkOutDate) && styles.applyButtonDisabled
+          ]}
+          onPress={handleApply}
+          disabled={!checkInDate || !checkOutDate}
+        >
+          <Text style={styles.applyButtonText}>Apply</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
@@ -133,7 +213,7 @@ const DateSelectionScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#f8f9fa',
   },
   
   // Header
@@ -141,8 +221,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#4A90E2',
+    paddingVertical: 16,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
   },
   backButton: {
     width: 40,
@@ -151,21 +233,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 12,
   },
-  backIcon: {
-    fontSize: 20,
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-  },
   headerTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: '#1F2937',
   },
   
   // Content
   content: {
     flex: 1,
     paddingHorizontal: 20,
+    backgroundColor: '#f8f9fa',
   },
   
   // Date Display
@@ -173,9 +251,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     paddingVertical: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
+    backgroundColor: '#FFFFFF',
+    marginHorizontal: -20,
+    marginTop: 12,
     marginBottom: 20,
+    paddingHorizontal: 20,
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
   },
   dateColumn: {
     alignItems: 'center',
@@ -223,25 +309,33 @@ const styles = StyleSheet.create({
   },
   dayButton: {
     width: 40,
-    height: 40,
+    height: 50,
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 4,
   },
   emptyDay: {
     width: 40,
-    height: 40,
+    height: 50,
   },
   checkInDay: {
-    backgroundColor: '#4A90E2',
+    backgroundColor: '#3b82f6',
     borderRadius: 20,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   checkOutDay: {
-    backgroundColor: '#4A90E2',
+    backgroundColor: '#3b82f6',
     borderRadius: 20,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   rangeDay: {
-    backgroundColor: '#E3F2FD',
+    backgroundColor: '#E0F7FA',
   },
   dayText: {
     fontSize: 16,
@@ -251,10 +345,54 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: '600',
   },
+  disabledDay: {
+    opacity: 0.3,
+  },
+  disabledDayText: {
+    color: '#9CA3AF',
+    textDecorationLine: 'line-through',
+  },
+  dateLabel: {
+    fontSize: 8,
+    color: '#3b82f6',
+    fontWeight: '600',
+    marginTop: 2,
+  },
   
   // Bottom Space
   bottomSpace: {
     height: 50,
+  },
+
+  // Apply Button
+  applyButtonContainer: {
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    paddingBottom: 24,
+    borderTopWidth: 1,
+    borderTopColor: '#F3F4F6',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  applyButton: {
+    backgroundColor: '#3b82f6',
+    borderRadius: 12,
+    paddingVertical: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  applyButtonDisabled: {
+    backgroundColor: '#D1D5DB',
+    opacity: 0.6,
+  },
+  applyButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFFFFF',
   },
 });
 

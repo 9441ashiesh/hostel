@@ -11,6 +11,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import UserLayout from '../../components/layout/UserLayout';
 import { useFavorites } from '../../context/FavoritesContext';
+import { Ionicons } from '@expo/vector-icons';
 
 const SearchResultsScreen = ({ navigation, route }) => {
   const { toggleFavorite, isFavorite } = useFavorites();
@@ -86,10 +87,8 @@ const SearchResultsScreen = ({ navigation, route }) => {
     },
   ];
 
-  const handleGoBack = () => {
-    navigation.navigate('SearchScreen', { 
-      updatedFavorites: Array.from(favorites) 
-    });
+    const handleGoBack = () => {
+    navigation.goBack();
   };
 
   const renderSearchResult = ({ item }) => (
@@ -144,11 +143,11 @@ const SearchResultsScreen = ({ navigation, route }) => {
       <SafeAreaView style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.backButton}
             onPress={handleGoBack}
           >
-            <Text style={styles.backIcon}>←</Text>
+            <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
           </TouchableOpacity>
           <View style={styles.headerInfo}>
             <Text style={styles.headerTitle}>Search Results</Text>
@@ -188,7 +187,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#4A90E2',
+    backgroundColor: '#3b82f6',
     paddingHorizontal: 20,
     paddingVertical: 16,
     paddingTop: 20,
@@ -198,11 +197,6 @@ const styles = StyleSheet.create({
     height: 40,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  backIcon: {
-    fontSize: 20,
-    color: '#FFFFFF',
-    fontWeight: 'bold',
   },
   headerInfo: {
     flex: 1,

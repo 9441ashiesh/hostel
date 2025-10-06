@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,263 +8,169 @@ import {
   TextInput,
   Image,
   StatusBar,
-  ActivityIndicator,
-  Keyboard,
-  Platform,
-  KeyboardAvoidingView,
+  Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import UserLayout from '../../components/layout/UserLayout';
+import { Ionicons } from '@expo/vector-icons';
 
-const SearchScreen = ({ navigation }) => {
-  const [isKeyboardVisible, setKeyboardVisible] = React.useState(false);
-  const [imageLoading, setImageLoading] = React.useState({});
+const SearchScreen = ({ navigation, route }) => {
+  const [selectedLocation, setSelectedLocation] = useState('');
+  const [selectedDate, setSelectedDate] = useState('');
 
-  React.useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        setKeyboardVisible(true);
-      }
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setKeyboardVisible(false);
-      }
-    );
+  // Get values returned from other screens
+  useEffect(() => {
+    if (route.params?.selectedLocation !== undefined) {
+      setSelectedLocation(route.params.selectedLocation);
+    }
+    if (route.params?.selectedDate !== undefined) {
+      setSelectedDate(route.params.selectedDate);
+    }
+  }, [route.params]);
 
-    return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
-  }, []);
+  const handleLocationPress = () => {
+    navigation.navigate('LocationSelectionScreen', {
+      currentDate: selectedDate,
+      currentLocation: selectedLocation
+    });
+  };
+
+  const handleDatePress = () => {
+    navigation.navigate('DateSelectionScreen', {
+      currentLocation: selectedLocation,
+      currentDate: selectedDate
+    });
+  };
 
   const handleSearch = () => {
-    Keyboard.dismiss();
-    // Add your search logic here
+    // Navigate to search results with selected parameters
+    navigation.navigate('SearchResultsScreen', {
+      location: selectedLocation,
+      date: selectedDate,
+    });
   };
+  const popularHotels = [
+    {
+      id: 1,
+      name: 'The Dreamland by Young Villas',
+      location: 'Kuta, Denpasar, Bali',
+      price: 34,
+      rating: 4.8,
+      image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&h=400',
+    },
+    {
+      id: 2,
+      name: 'Paradise Hotel',
+      location: 'Kuta, Denpasar, Bali',
+      price: 37,
+      rating: 4.8,
+      image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&h=400',
+    },
+  ];
 
   return (
     <UserLayout navigation={navigation} activeTab="search">
       <SafeAreaView 
         style={styles.safeArea}
-        edges={['top', 'right', 'left']}
+        edges={['top']}
       >
-        <StatusBar barStyle="dark-content" backgroundColor="#F5F7FA" />
-        <KeyboardAvoidingView 
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={{ flex: 1 }}
+        <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+        
+        <ScrollView 
+          style={styles.scrollContainer} 
+          showsVerticalScrollIndicator={false}
         >
-          <ScrollView 
-            style={styles.scrollContainer} 
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps="handled"
-          >
-            <View style={styles.container}>
-              {/* Header */}
-              <View style={styles.header}>
-                <View>
-                  <Text style={styles.greeting}>Hey Hasna👋</Text>
-                  <Text style={styles.welcomeText}>Let's start your journey!</Text>
-                </View>
-                <TouchableOpacity 
-                  style={styles.notificationButton}
-                  accessibilityLabel="Notifications"
-                  accessibilityHint="Check your notifications"
-                >
-                  <Text style={styles.bellIcon}>🔔</Text>
-                </TouchableOpacity>
-              </View>
-
-              {/* Search Form */}
-              <View style={styles.searchCard}>
-                {/* Location Input */}
-                <View style={styles.inputRow}>
-                  <Text style={styles.inputLabel}>Location</Text>
-                  <View style={styles.inputWrapper}>
-                    <Text style={styles.inputIcon}>📍</Text>
-                    <TextInput
-                      style={styles.input}
-                      placeholder="Enter your destination"
-                      placeholderTextColor="#A0AEC0"
-                      returnKeyType="next"
-                      accessibilityLabel="Location input"
-                      accessibilityHint="Enter your destination location"
-                      autoCorrect={false}
-                      clearButtonMode="while-editing"
-                    />
-                  </View>
-                </View>
-
-                {/* Date and Guest Row */}
-                <View style={styles.row}>
-                  {/* Date Input */}
-                  <View style={[styles.inputContainer, styles.halfWidth]}>
-                    <Text style={styles.inputLabel}>Date</Text>
-                    <TouchableOpacity 
-                      style={styles.inputWrapper}
-                      activeOpacity={0.7}
-                      accessibilityLabel="Date selector"
-                      accessibilityHint="Select your check-in date"
-                    >
-                      <Text style={styles.inputIcon}>📅</Text>
-                      <Text style={styles.inputText}>Select Date</Text>
-                    </TouchableOpacity>
-                  </View>
-
-                  {/* Guest Input */}
-                  <View style={[styles.inputContainer, styles.halfWidth]}>
-                    <Text style={styles.inputLabel}>Guest</Text>
-                    <TouchableOpacity 
-                      style={styles.inputWrapper}
-                      activeOpacity={0.7}
-                      accessibilityLabel="Guest selector"
-                      accessibilityHint="Select number of guests"
-                    >
-                      <Text style={styles.inputIcon}>👤</Text>
-                      <Text style={styles.inputText}>Add guest</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-
-                {/* Search Button */}
-                <TouchableOpacity 
-                  style={styles.searchButton}
-                  activeOpacity={0.7}
-                  accessibilityLabel="Search button"
-                  accessibilityHint="Search for hotels with the entered criteria"
-                  onPress={handleSearch}
-                >
-                  <Text style={styles.searchButtonText}>Search</Text>
-                </TouchableOpacity>
-              </View>
-
-              {/* Popular Hotels */}
-              <View style={styles.section}>
-                <View style={styles.sectionHeader}>
-                  <Text style={styles.sectionTitle}>Popular Hotel</Text>
-                  <TouchableOpacity 
-                    accessibilityLabel="See all hotels"
-                    accessibilityHint="View all popular hotels"
-                  >
-                    <Text style={styles.seeAll}>See all</Text>
-                  </TouchableOpacity>
-                </View>
-
-                <ScrollView 
-                  horizontal 
-                  showsHorizontalScrollIndicator={false}
-                  contentContainerStyle={styles.hotelListContent}
-                >
-                  {/* Hotel Card 1 */}
-                  <View style={styles.hotelCard}>
-                    <View style={styles.hotelImageContainer}>
-                      <Image
-                        source={{ uri: 'https://picsum.photos/300/200' }}
-                        style={styles.hotelImage}
-                        onLoadStart={() => setImageLoading(prev => ({ ...prev, 1: true }))}
-                        onLoadEnd={() => setImageLoading(prev => ({ ...prev, 1: false }))}
-                      />
-                      {imageLoading[1] && (
-                        <ActivityIndicator 
-                          style={styles.imageLoader} 
-                          color="#06B6D4" 
-                        />
-                      )}
-                    </View>
-                    <TouchableOpacity 
-                      style={styles.heartButton}
-                      activeOpacity={0.7}
-                      accessibilityLabel="Add to favorites"
-                    >
-                      <Text style={styles.heartIcon}>🤍</Text>
-                    </TouchableOpacity>
-                    <View style={styles.hotelInfo}>
-                      <Text 
-                        style={styles.hotelName}
-                        numberOfLines={1}
-                      >
-                        The Dreamland by Young Villas
-                      </Text>
-                      <View style={styles.hotelLocationRow}>
-                        <Text style={styles.locationIcon}>📍</Text>
-                        <Text 
-                          style={styles.locationText}
-                          numberOfLines={1}
-                        >
-                          Kuta, Denpasar, Bali
-                        </Text>
-                      </View>
-                      <View style={styles.hotelBottomRow}>
-                        <View style={styles.priceContainer}>
-                          <Text style={styles.priceAmount}>$34</Text>
-                          <Text style={styles.priceUnit}>/night</Text>
-                        </View>
-                        <View style={styles.ratingContainer}>
-                          <Text style={styles.ratingIcon}>⭐</Text>
-                          <Text style={styles.ratingText}>4.8</Text>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-
-                  {/* Hotel Card 2 */}
-                  <View style={styles.hotelCard}>
-                    <View style={styles.hotelImageContainer}>
-                      <Image
-                        source={{ uri: 'https://picsum.photos/300/201' }}
-                        style={styles.hotelImage}
-                        onLoadStart={() => setImageLoading(prev => ({ ...prev, 2: true }))}
-                        onLoadEnd={() => setImageLoading(prev => ({ ...prev, 2: false }))}
-                      />
-                      {imageLoading[2] && (
-                        <ActivityIndicator 
-                          style={styles.imageLoader} 
-                          color="#06B6D4" 
-                        />
-                      )}
-                    </View>
-                    <TouchableOpacity 
-                      style={styles.heartButton}
-                      activeOpacity={0.7}
-                      accessibilityLabel="Add to favorites"
-                    >
-                      <Text style={styles.heartIcon}>🤍</Text>
-                    </TouchableOpacity>
-                    <View style={styles.hotelInfo}>
-                      <Text 
-                        style={styles.hotelName}
-                        numberOfLines={1}
-                      >
-                        Paradise Hotel
-                      </Text>
-                      <View style={styles.hotelLocationRow}>
-                        <Text style={styles.locationIcon}>📍</Text>
-                        <Text 
-                          style={styles.locationText}
-                          numberOfLines={1}
-                        >
-                          Kuta, Denpasar, Bali
-                        </Text>
-                      </View>
-                      <View style={styles.hotelBottomRow}>
-                        <View style={styles.priceContainer}>
-                          <Text style={styles.priceAmount}>$37</Text>
-                          <Text style={styles.priceUnit}>/night</Text>
-                        </View>
-                        <View style={styles.ratingContainer}>
-                          <Text style={styles.ratingIcon}>⭐</Text>
-                          <Text style={styles.ratingText}>4.8</Text>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-                </ScrollView>
-              </View>
+          {/* Header */}
+          <View style={styles.header}>
+            <View>
+              <Text style={styles.greeting}>Hey Hasna👋</Text>
+              <Text style={styles.welcomeText}>Let's start your journey!</Text>
             </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
+            <TouchableOpacity style={styles.notificationButton}>
+              <Ionicons name="notifications-outline" size={24} color="#1F2937" />
+              <View style={styles.notificationBadge} />
+            </TouchableOpacity>
+          </View>
+
+          {/* Search Form Card */}
+          <View style={styles.searchCard}>
+            {/* Location */}
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Location</Text>
+              <TouchableOpacity 
+                style={styles.inputWrapper}
+                onPress={handleLocationPress}
+              >
+                <Ionicons name="location-outline" size={20} color="#B0B0B0" style={styles.inputIcon} />
+                <Text style={selectedLocation ? styles.inputText : styles.placeholderText}>
+                  {selectedLocation || 'Enter your destination'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Date */}
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Date</Text>
+              <TouchableOpacity 
+                style={styles.inputWrapper}
+                onPress={handleDatePress}
+              >
+                <Ionicons name="calendar-outline" size={20} color="#B0B0B0" style={styles.inputIcon} />
+                <Text style={selectedDate ? styles.inputText : styles.placeholderText}>
+                  {selectedDate || 'Select Date'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Search Button */}
+            <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
+              <Text style={styles.searchButtonText}>Search</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Popular Hotel Section */}
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>Popular Hotel</Text>
+              <TouchableOpacity>
+                <Text style={styles.seeAll}>See all</Text>
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView 
+              horizontal 
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.hotelsContent}
+            >
+              {popularHotels.map((hotel) => (
+                <TouchableOpacity key={hotel.id} style={styles.hotelCard}>
+                  <Image source={{ uri: hotel.image }} style={styles.hotelImage} />
+                  <TouchableOpacity style={styles.heartButton}>
+                    <Ionicons name="heart-outline" size={20} color="#6B7280" />
+                  </TouchableOpacity>
+                  <View style={styles.hotelInfo}>
+                    <Text style={styles.hotelName} numberOfLines={1}>{hotel.name}</Text>
+                    <View style={styles.locationRow}>
+                      <Ionicons name="location-outline" size={14} color="#6B7280" />
+                      <Text style={styles.locationText} numberOfLines={1}>{hotel.location}</Text>
+                    </View>
+                    <View style={styles.bottomRow}>
+                      <Text style={styles.price}>
+                        ${hotel.price}<Text style={styles.priceUnit}>/night</Text>
+                      </Text>
+                      <View style={styles.ratingContainer}>
+                        <Ionicons name="star" size={14} color="#FFB800" />
+                        <Text style={styles.ratingText}>{hotel.rating}</Text>
+                      </View>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+
+          <View style={{ height: 20 }} />
+        </ScrollView>
       </SafeAreaView>
     </UserLayout>
   );
@@ -273,236 +179,215 @@ const SearchScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#F5F7FA',
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-  },
-  container: {
-    flex: 1,
+    backgroundColor: '#f8f9fa',
   },
   scrollContainer: {
     flex: 1,
   },
   header: {
-    padding: 24,
     flexDirection: 'row',
-    alignItems: 'flex-start',
     justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 20,
   },
   greeting: {
-    fontSize: 16,
-    color: '#64748B',
+    fontSize: 14,
+    color: '#9CA3AF',
     marginBottom: 4,
   },
   welcomeText: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: '#1E293B',
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#1F2937',
   },
   notificationButton: {
-    padding: 8,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
   },
-  bellIcon: {
-    fontSize: 20,
+  notificationBadge: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#EF4444',
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
   },
   searchCard: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 24,
-    margin: 24,
-    marginTop: 0,
-    padding: 24,
+    marginHorizontal: 20,
+    borderRadius: 20,
+    padding: 20,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 15,
-    elevation: 2,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 3,
   },
-  inputRow: {
+  inputGroup: {
     marginBottom: 16,
   },
-  inputLabel: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#1E293B',
+  label: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1F2937',
     marginBottom: 8,
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F8FAFC',
+    backgroundColor: '#F9FAFB',
     borderRadius: 12,
-    padding: Platform.OS === 'ios' ? 16 : 12,
-    minHeight: 48,
+    paddingHorizontal: 12,
+    paddingVertical: 14,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+  },
+  inputIcon: {
+    marginRight: 8,
   },
   input: {
     flex: 1,
-    fontSize: 16,
-    color: '#1E293B',
-    paddingVertical: 0,
-  },
-  inputIcon: {
-    marginRight: 12,
-    fontSize: 18,
-    color: '#A0AEC0',
+    fontSize: 14,
+    color: '#1F2937',
   },
   inputText: {
-    fontSize: 16,
-    color: '#A0AEC0',
+    flex: 1,
+    fontSize: 14,
+    color: '#1F2937',
+    fontWeight: '500',
   },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 16,
-  },
-  halfWidth: {
-    width: '48%',
+  placeholderText: {
+    flex: 1,
+    fontSize: 14,
+    color: '#B0B0B0',
   },
   searchButton: {
-    backgroundColor: '#06B6D4',
-    borderRadius: 12,
-    padding: 16,
+    backgroundColor: '#3b82f6',
+    borderRadius: 24,
+    paddingVertical: 16,
     alignItems: 'center',
     marginTop: 8,
+    shadowColor: '#3b82f6',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 4,
   },
   searchButtonText: {
-    color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '600',
+    color: '#FFFFFF',
   },
   section: {
-    padding: 24,
-    paddingBottom: Platform.OS === 'ios' ? 40 : 24,
+    marginTop: 24,
+    paddingBottom: 16,
   },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingHorizontal: 20,
     marginBottom: 16,
   },
   sectionTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#1E293B',
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#1F2937',
   },
   seeAll: {
-    color: '#06B6D4',
     fontSize: 14,
-    fontWeight: '500',
+    color: '#3b82f6',
+    fontWeight: '600',
   },
-  hotelListContent: {
-    paddingRight: 24,
+  hotelsContent: {
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   hotelCard: {
     width: 220,
-    marginRight: 16,
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    overflow: 'hidden',
+    borderRadius: 20,
+    marginRight: 16,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  hotelImageContainer: {
-    width: '100%',
-    height: 120,
-    backgroundColor: '#F8FAFC',
-    position: 'relative',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    elevation: 3,
+    overflow: 'hidden',
   },
   hotelImage: {
     width: '100%',
-    height: '100%',
+    height: 140,
     resizeMode: 'cover',
-  },
-  imageLoader: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    marginLeft: -12,
-    marginTop: -12,
   },
   heartButton: {
     position: 'absolute',
     top: 12,
     right: 12,
     backgroundColor: '#FFFFFF',
-    borderRadius: 20,
     width: 32,
     height: 32,
+    borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  heartIcon: {
-    fontSize: 16,
+    shadowRadius: 2,
+    elevation: 2,
   },
   hotelInfo: {
     padding: 12,
   },
   hotelName: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '600',
-    color: '#1E293B',
-    marginBottom: 4,
+    color: '#1F2937',
+    marginBottom: 6,
   },
-  hotelLocationRow: {
+  locationRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 8,
   },
-  locationIcon: {
-    marginRight: 4,
-    fontSize: 14,
-    color: '#A0AEC0',
-  },
   locationText: {
-    fontSize: 14,
-    color: '#64748B',
+    fontSize: 12,
+    color: '#6B7280',
+    marginLeft: 4,
     flex: 1,
   },
-  hotelBottomRow: {
+  bottomRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  priceContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  priceAmount: {
+  price: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#06B6D4',
+    fontWeight: '700',
+    color: '#3b82f6',
   },
   priceUnit: {
-    fontSize: 14,
-    color: '#64748B',
-    marginLeft: 2,
+    fontSize: 12,
+    fontWeight: '400',
+    color: '#6B7280',
   },
   ratingContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  ratingIcon: {
-    fontSize: 14,
-    color: '#FBBF24',
-    marginRight: 4,
-  },
   ratingText: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#1E293B',
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#1F2937',
+    marginLeft: 4,
   },
 });
 

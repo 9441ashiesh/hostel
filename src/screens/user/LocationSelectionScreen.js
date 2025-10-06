@@ -8,9 +8,12 @@ import {
   ScrollView,
   TextInput,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
-const LocationSelectionScreen = ({ navigation }) => {
+const LocationSelectionScreen = ({ navigation, route }) => {
   const [searchText, setSearchText] = useState('');
+  const currentDate = route.params?.currentDate || '';
+  const currentLocation = route.params?.currentLocation || '';
 
   const recentSearches = [
     { id: 1, name: 'Gachibowli', type: 'Area' },
@@ -37,8 +40,11 @@ const LocationSelectionScreen = ({ navigation }) => {
   );
 
   const handleLocationSelect = (locationName) => {
-    // Navigate back to search screen with selected location
-    navigation.navigate('SearchScreen', { selectedLocation: locationName });
+    // Navigate back to search screen with selected location and preserve date
+    navigation.navigate('SearchScreen', { 
+      selectedLocation: locationName,
+      selectedDate: currentDate
+    });
   };
 
   return (
@@ -49,7 +55,7 @@ const LocationSelectionScreen = ({ navigation }) => {
           style={styles.backButton} 
           onPress={() => navigation.goBack()}
         >
-          <Text style={styles.backIcon}>←</Text>
+          <Ionicons name="arrow-back" size={24} color="#1F2937" />
         </TouchableOpacity>
         
         <View style={styles.searchContainer}>
@@ -61,7 +67,7 @@ const LocationSelectionScreen = ({ navigation }) => {
             autoFocus={true}
           />
           <TouchableOpacity style={styles.searchIconButton}>
-            <Text style={styles.searchIcon}>🔍</Text>
+            <Ionicons name="search" size={18} color="#6B7280" />
           </TouchableOpacity>
         </View>
       </View>
@@ -73,7 +79,7 @@ const LocationSelectionScreen = ({ navigation }) => {
           onPress={() => handleLocationSelect('Current Location')}
         >
           <View style={styles.nearMeIcon}>
-            <Text style={styles.locationIcon}>🎯</Text>
+            <Ionicons name="navigate" size={20} color="#17A2B8" />
           </View>
           <View style={styles.nearMeText}>
             <Text style={styles.nearMeTitle}>Near me</Text>
@@ -122,7 +128,7 @@ const LocationSelectionScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#f8f9fa',
   },
   
   // Header
@@ -130,8 +136,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#4A90E2',
+    paddingVertical: 16,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
   },
   backButton: {
     width: 40,
@@ -141,8 +149,8 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   backIcon: {
-    fontSize: 20,
-    color: '#FFFFFF',
+    fontSize: 24,
+    color: '#1F2937',
     fontWeight: 'bold',
   },
   searchContainer: {
@@ -162,15 +170,11 @@ const styles = StyleSheet.create({
   searchIconButton: {
     padding: 4,
   },
-  searchIcon: {
-    fontSize: 16,
-    color: '#6B7280',
-  },
   
   // Content
   content: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: '#f8f9fa',
   },
   
   // Near Me
@@ -185,14 +189,11 @@ const styles = StyleSheet.create({
   nearMeIcon: {
     width: 40,
     height: 40,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: '#dbeafe',
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 16,
-  },
-  locationIcon: {
-    fontSize: 20,
   },
   nearMeText: {
     flex: 1,
