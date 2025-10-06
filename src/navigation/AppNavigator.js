@@ -26,7 +26,17 @@ import LocationSelectionScreen from '../screens/user/LocationSelectionScreen';
 import DateSelectionScreen from '../screens/user/DateSelectionScreen';
 import GuestSelectionScreen from '../screens/user/GuestSelectionScreen';
 import BookingScreen from '../screens/user/BookingScreen';
-import SignupScreen from '../screens/auth/SignupScreen' ;
+import SignupScreen from '../screens/auth/SignupScreen';
+
+// New Profile Screens
+import PasswordSecurityScreen from '../screens/user/PasswordSecurityScreen';
+import PrivacyProfileScreen from '../screens/user/PrivacyProfileScreen';
+import CountrySelectionScreen from '../screens/user/CountrySelectionScreen';
+import CurrencySelectionScreen from '../screens/user/CurrencySelectionScreen';
+import LanguageSelectionScreen from '../screens/user/LanguageSelectionScreen';
+import NotificationSettingsScreen from '../screens/user/NotificationSettingsScreen';
+import FAQScreen from '../screens/user/FAQScreen';
+import CustomerServiceScreen from '../screens/user/CustomerServiceScreen';
 
 
 
@@ -78,6 +88,14 @@ const ProfileStack = () => (
     <Stack.Screen name="PaymentMethodsScreen" component={PaymentMethodsScreen} />
     <Stack.Screen name="PrivacyPolicyScreen" component={PrivacyPolicyScreen} />
     <Stack.Screen name="TermsOfServiceScreen" component={TermsOfServiceScreen} />
+    <Stack.Screen name="PasswordSecurityScreen" component={PasswordSecurityScreen} />
+    <Stack.Screen name="PrivacyProfileScreen" component={PrivacyProfileScreen} />
+    <Stack.Screen name="CountrySelectionScreen" component={CountrySelectionScreen} />
+    <Stack.Screen name="CurrencySelectionScreen" component={CurrencySelectionScreen} />
+    <Stack.Screen name="LanguageSelectionScreen" component={LanguageSelectionScreen} />
+    <Stack.Screen name="NotificationSettingsScreen" component={NotificationSettingsScreen} />
+    <Stack.Screen name="FAQScreen" component={FAQScreen} />
+    <Stack.Screen name="CustomerServiceScreen" component={CustomerServiceScreen} />
   </Stack.Navigator>
 );
 
