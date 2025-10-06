@@ -1,7 +1,9 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useAuth } from '../context/AuthContext';
+import CustomBottomTabBar from '../components/navigation/CustomBottomTabBar';
 
 // Auth Screens
 import UserTypeSelection from '../screens/auth/UserTypeSelection';
@@ -29,6 +31,7 @@ import SignupScreen from '../screens/auth/SignupScreen' ;
 
 
 const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
 const AuthStack = () => (
   <Stack.Navigator
@@ -42,27 +45,63 @@ const AuthStack = () => (
   </Stack.Navigator>
 );
 
-const UserStack = () => (
-  <Stack.Navigator
-    screenOptions={{
-      headerShown: false,
-    }}
-  >
+// Stack navigators for each tab
+const HomeStack = () => (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
     <Stack.Screen name="UserDashboard" component={UserDashboard} />
+    <Stack.Screen name="HostelDetailScreen" component={HostelDetailScreen} />
+    <Stack.Screen name="LocationSelectionScreen" component={LocationSelectionScreen} />
+    <Stack.Screen name="DateSelectionScreen" component={DateSelectionScreen} />
+    <Stack.Screen name="GuestSelectionScreen" component={GuestSelectionScreen} />
+    <Stack.Screen name="BookingScreen" component={BookingScreen} />
+  </Stack.Navigator>
+);
+
+const SearchStack = () => (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="SearchScreen" component={SearchScreen} />
+    <Stack.Screen name="SearchResultsScreen" component={SearchResultsScreen} />
+  </Stack.Navigator>
+);
+
+const LikesStack = () => (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="LikesScreen" component={LikesScreen} />
+  </Stack.Navigator>
+);
+
+const ProfileStack = () => (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
     <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
     <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
     <Stack.Screen name="MyBookingsScreen" component={MyBookingsScreen} />
     <Stack.Screen name="PaymentMethodsScreen" component={PaymentMethodsScreen} />
     <Stack.Screen name="PrivacyPolicyScreen" component={PrivacyPolicyScreen} />
     <Stack.Screen name="TermsOfServiceScreen" component={TermsOfServiceScreen} />
-    <Stack.Screen name="LikesScreen" component={LikesScreen} />
-    <Stack.Screen name="HostelDetailScreen" component={HostelDetailScreen} />
-    <Stack.Screen name="SearchScreen" component={SearchScreen} />
-    <Stack.Screen name="SearchResultsScreen" component={SearchResultsScreen} />
-    <Stack.Screen name="LocationSelectionScreen" component={LocationSelectionScreen} />
-    <Stack.Screen name="DateSelectionScreen" component={DateSelectionScreen} />
-    <Stack.Screen name="GuestSelectionScreen" component={GuestSelectionScreen} />
-    <Stack.Screen name="BookingScreen" component={BookingScreen} />
+  </Stack.Navigator>
+);
+
+const MainTabNavigator = () => (
+  <Tab.Navigator
+    tabBar={(props) => <CustomBottomTabBar {...props} />}
+    screenOptions={{
+      headerShown: false,
+    }}
+  >
+    <Tab.Screen name="Home" component={HomeStack} />
+    <Tab.Screen name="Search" component={SearchStack} />
+    <Tab.Screen name="Likes" component={LikesStack} />
+    <Tab.Screen name="Profile" component={ProfileStack} />
+  </Tab.Navigator>
+);
+
+const UserStack = () => (
+  <Stack.Navigator
+    screenOptions={{
+      headerShown: false,
+    }}
+  >
+    <Stack.Screen name="MainTabs" component={MainTabNavigator} />
     <Stack.Screen name="SignupScreen" component={SignupScreen} />
   </Stack.Navigator>
 );

@@ -5,77 +5,101 @@ import {
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
+  ScrollView,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
-const GuestSelectionScreen = ({ navigation }) => {
-  const [numberOfPeople, setNumberOfPeople] = useState(1);
+const GuestSelectionScreen = ({ navigation, route }) => {
+  const currentLocation = route.params?.currentLocation || '';
+  const currentDate = route.params?.currentDate || '';
+  const currentGuests = route.params?.currentGuests || 1;
+  
+  const [selectedGuests, setSelectedGuests] = useState(currentGuests);
 
-  const incrementPeople = () => {
-    setNumberOfPeople(prev => prev + 1);
+  const guestOptions = [
+    { id: 1, label: '1 Guest', value: 1 },
+    { id: 2, label: '2 Guests', value: 2 },
+    { id: 3, label: '3 Guests', value: 3 },
+    { id: 4, label: '4 Guests', value: 4 },
+    { id: 5, label: '5 Guests', value: 5 },
+    { id: 6, label: '6 Guests', value: 6 },
+    { id: 7, label: '7 Guests', value: 7 },
+    { id: 8, label: '8 Guests', value: 8 },
+  ];
+
+  const handleGuestSelect = (guestCount) => {
+    setSelectedGuests(guestCount);
   };
 
-  const decrementPeople = () => {
-    if (numberOfPeople > 1) {
-      setNumberOfPeople(prev => prev - 1);
-    }
-  };
-
-  const handleDone = () => {
-    // Pass the selected number back to the search screen
+  const handleApply = () => {
+    // Navigate back to search screen with selected guests and preserve other data
     navigation.navigate('SearchScreen', { 
-      selectedGuests: numberOfPeople 
+      selectedLocation: currentLocation,
+      selectedDate: currentDate,
+      selectedGuests: selectedGuests
     });
+  };
+
+  const handleGoBack = () => {
+    navigation.goBack();
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.backButton} 
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={styles.backIcon}>←</Text>
+        <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={24} color="#1f2937" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Number of People</Text>
+        <Text style={styles.headerTitle}>Select Guests</Text>
+        <View style={styles.placeholder} />
       </View>
 
-      {/* Content */}
-      <View style={styles.content}>
-        <View style={styles.counterRow}>
-          <View style={styles.labelContainer}>
-            <Text style={styles.counterLabel}>Number of People</Text>
-            <Text style={styles.counterSubtitle}>Select total guests</Text>
-          </View>
-          <View style={styles.counterControls}>
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Number of Guests</Text>
+          <Text style={styles.sectionSubtitle}>How many people will be staying?</Text>
+        </View>
+
+        <View style={styles.guestOptions}>
+          {guestOptions.map((option) => (
             <TouchableOpacity
+              key={option.id}
               style={[
-                styles.counterButton,
-                numberOfPeople === 1 && styles.disabledButton
+                styles.guestOption,
+                selectedGuests === option.value && styles.selectedGuestOption
               ]}
-              onPress={decrementPeople}
-              disabled={numberOfPeople === 1}
+              onPress={() => handleGuestSelect(option.value)}
             >
               <Text style={[
-                styles.counterButtonText,
-                numberOfPeople === 1 && styles.disabledButtonText
-              ]}>−</Text>
+                styles.guestOptionText,
+                selectedGuests === option.value && styles.selectedGuestOptionText
+              ]}>
+                {option.label}
+              </Text>
+              {selectedGuests === option.value && (
+                <Ionicons name="checkmark" size={20} color="#3b82f6" />
+              )}
             </TouchableOpacity>
-            <Text style={styles.counterValue}>{numberOfPeople}</Text>
-            <TouchableOpacity
-              style={styles.counterButton}
-              onPress={incrementPeople}
-            >
-              <Text style={styles.counterButtonText}>+</Text>
-            </TouchableOpacity>
-          </View>
+          ))}
         </View>
-      </View>
 
-      {/* Done Button */}
+        <View style={styles.customGuestSection}>
+          <Text style={styles.customGuestTitle}>Need more than 8 guests?</Text>
+          <Text style={styles.customGuestSubtitle}>
+            Contact us for group bookings and special arrangements
+          </Text>
+          <TouchableOpacity style={styles.contactButton}>
+            <Ionicons name="call" size={16} color="#3b82f6" />
+            <Text style={styles.contactButtonText}>Contact Support</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.doneButton} onPress={handleDone}>
-          <Text style={styles.doneButtonText}>Done</Text>
+        <TouchableOpacity style={styles.applyButton} onPress={handleApply}>
+          <Text style={styles.applyButtonText}>
+            Apply ({selectedGuests} {selectedGuests === 1 ? 'Guest' : 'Guests'})
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -85,113 +109,122 @@ const GuestSelectionScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#f8f9fa',
   },
-  
-  // Header
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#4A90E2',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    paddingBottom: 15,
+    backgroundColor: '#f8f9fa',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e5e7eb',
   },
   backButton: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-  },
-  backIcon: {
-    fontSize: 20,
-    color: '#FFFFFF',
-    fontWeight: 'bold',
+    padding: 8,
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: '#1f2937',
   },
-  
-  // Content
+  placeholder: {
+    width: 40,
+  },
   content: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingTop: 30,
   },
-  
-  // Counter Row
-  counterRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
+  section: {
+    paddingTop: 20,
+    paddingBottom: 20,
   },
-  labelContainer: {
-    flex: 1,
-  },
-  counterLabel: {
-    fontSize: 16,
+  sectionTitle: {
+    fontSize: 20,
     fontWeight: '600',
-    color: '#1F2937',
+    color: '#1f2937',
     marginBottom: 4,
   },
-  counterSubtitle: {
+  sectionSubtitle: {
     fontSize: 14,
-    color: '#6B7280',
+    color: '#6b7280',
   },
-  counterControls: {
+  guestOptions: {
+    gap: 12,
+  },
+  guestOption: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  counterButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#4A90E2',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  disabledButton: {
-    backgroundColor: '#E5E7EB',
-  },
-  counterButtonText: {
-    fontSize: 20,
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-  },
-  disabledButtonText: {
-    color: '#9CA3AF',
-  },
-  counterValue: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#1F2937',
-    marginHorizontal: 20,
-    minWidth: 30,
-    textAlign: 'center',
-  },
-  
-  // Footer
-  footer: {
-    paddingHorizontal: 20,
-    paddingVertical: 20,
-    borderTopWidth: 1,
-    borderTopColor: '#F3F4F6',
-  },
-  doneButton: {
-    backgroundColor: '#4A90E2',
-    borderRadius: 12,
+    justifyContent: 'space-between',
+    backgroundColor: '#ffffff',
+    paddingHorizontal: 16,
     paddingVertical: 16,
-    alignItems: 'center',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
   },
-  doneButtonText: {
+  selectedGuestOption: {
+    borderColor: '#3b82f6',
+    backgroundColor: '#f0f9ff',
+  },
+  guestOptionText: {
+    fontSize: 16,
+    color: '#1f2937',
+    fontWeight: '500',
+  },
+  selectedGuestOptionText: {
+    color: '#3b82f6',
+    fontWeight: '600',
+  },
+  customGuestSection: {
+    marginTop: 30,
+    padding: 20,
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+  },
+  customGuestTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: '#1f2937',
+    marginBottom: 4,
+  },
+  customGuestSubtitle: {
+    fontSize: 14,
+    color: '#6b7280',
+    marginBottom: 16,
+    lineHeight: 20,
+  },
+  contactButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    alignSelf: 'flex-start',
+  },
+  contactButtonText: {
+    fontSize: 14,
+    color: '#3b82f6',
+    fontWeight: '600',
+  },
+  footer: {
+    padding: 20,
+    backgroundColor: '#f8f9fa',
+    borderTopWidth: 1,
+    borderTopColor: '#e5e7eb',
+  },
+  applyButton: {
+    backgroundColor: '#3b82f6',
+    paddingVertical: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  applyButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
 
